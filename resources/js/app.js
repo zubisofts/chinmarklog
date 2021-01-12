@@ -11,12 +11,14 @@ import PortalVue from 'portal-vue';
 // Adding Font-Awesome Library
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faClock, faFileAlt, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
-import { faCogs, faHome, faInfoCircle, faMapMarker, faPhoneSquareAlt, faThumbtack } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faFileAlt, faHandPointer, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+import { faCogs, faHome, faInfoCircle, faMapMarker, faPhoneSquareAlt, faShippingFast, faThumbtack, 
+    faTimes, faTruckMoving } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookSquare, faInstagram, faRev, faServicestack, faTwitter, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
 library.add(faClock, faMapMarker, faHome, faInfoCircle, faCogs, faServicestack, faQuestionCircle, faThumbtack, faRev, 
-    faFacebookSquare, faPhoneSquareAlt, faFileAlt, faTwitter, faWhatsapp, faInstagram)
+    faFacebookSquare, faPhoneSquareAlt, faFileAlt, faTwitter, faWhatsapp, faInstagram, faHandPointer, faTruckMoving, 
+    faShippingFast, faTimes)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false

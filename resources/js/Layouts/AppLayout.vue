@@ -1,36 +1,6 @@
 <template>
     <div id="app-layout">
-        <!-- Red Top HD -->
-        <div id="tophd" class="bg-red-600 px-4 xl:px-0 py-1 text-white">
-            <div class="container mx-auto max-w-7xl grid md:grid-cols-2 grid-cols-1">
-                <div>
-                    <inertia-link href="#" class="text-sm mr-2">
-                        <strong>
-                            <font-awesome-icon :icon="['far','clock']" />
-                            <span class="hidden md:inline">Instant</span> Delivery
-                        </strong>
-                    </inertia-link>
-                    <inertia-link href="#" class="text-sm mr-2">
-                        <strong>
-                            <font-awesome-icon icon="phone-square-alt" />
-                            Call <span class="hidden md:inline">Now</span>
-                        </strong>
-                    </inertia-link>
-                    <inertia-link href="#" class="text-sm mr-2">
-                        <strong>
-                            <font-awesome-icon :icon="['far','file-alt']" />
-                            <span class="hidden md:inline">Request</span> Quote
-                        </strong>
-                    </inertia-link>
-                </div>
-                <div class="text-right">
-                    <font-awesome-icon :icon="['fab','facebook-square']"  class="mr-1" />
-                    <font-awesome-icon :icon="['fab','whatsapp']"  class="mr-1" />
-                    <font-awesome-icon :icon="['fab','twitter']"  class="mr-1" />
-                    <font-awesome-icon :icon="['fab','instagram']"  class="mr-1" />
-                </div>
-            </div>
-        </div>
+        <quick-action-bar></quick-action-bar>
         <!-- White Header with Navs -->
         <header class="xl:px-0 sticky top-0 bg-gray-100 shadow">
             <div class="container mx-auto max-w-7xl grid lg:grid-cols-3 grid-cols-1">
@@ -62,10 +32,11 @@
 </style>
 
 <script>
-import MainNavbar from "../Components/MainNavbar.vue"
+import MainNavbar from "../Components/MainNavbar.vue";
+import QuickActionBar from "../Components/QuickActionBar.vue";
 
 export default {
-    components: { MainNavbar },
+    components: { MainNavbar, QuickActionBar },
     data(){
         return {
             showDropdown: false
