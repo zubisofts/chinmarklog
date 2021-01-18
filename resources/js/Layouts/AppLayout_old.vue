@@ -223,7 +223,7 @@
             JetDropdown,
             JetDropdownLink,
             JetNavLink,
-            JetResponsiveNavLink,
+            JetResponsiveNavLink, 
         },
 
         data() {

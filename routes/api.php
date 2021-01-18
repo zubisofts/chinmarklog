@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RiderController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +18,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['prefix' => 'riders'], function () {
+    Route::post('add', [RiderController::class, 'add']);
+    Route::post('fetch', [RiderController::class, 'fetch']);
+});
+
+Route::group(['prefix' => 'branch'], function () {
+    Route::post('add', [RiderController::class, 'add']);
+    Route::post('fetch', [RiderController::class, 'fetch']);
+    Route::post('fetch_all', [RiderController::class, 'fetch_all']);
+});
+
+Route::group(['prefix' => 'contacts'], function () {
+    Route::post('store', [ContactController::class, 'store']);
+    Route::post('fetch', [ContactController::class, 'fetch']);
+    Route::post('update', [ContactController::class, 'update']);
 });

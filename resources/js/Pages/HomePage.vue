@@ -1,6 +1,6 @@
 <template>
     <app-layout>
-        <div style="min-height:1500px;" class="bg-gray-100">
+        <div style="z-index:1;" class="bg-gray-100">
             <home-slider />
         </div>
     </app-layout>

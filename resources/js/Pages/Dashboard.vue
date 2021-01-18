@@ -1,8 +1,8 @@
 <template>
-    <app-layout>
+    <auth-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+            <h2 class="font-semibold text-xl text-light leading-tight flex-1 pt-2">
+                <span class="hidden sm:inline">Dashboard</span>
             </h2>
         </template>
 
@@ -13,16 +13,16 @@
                 </div>
             </div>
         </div>
-    </app-layout>
+    </auth-layout>
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
-    import Welcome from '@/Jetstream/Welcome'
+    import AuthLayout from './../Layouts/AuthLayout'
+    import Welcome from './../Components/Welcome'
 
     export default {
         components: {
-            AppLayout,
+            AuthLayout,
             Welcome,
         },
     }

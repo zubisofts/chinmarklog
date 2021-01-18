@@ -31,6 +31,25 @@ Route::get('/tracking', function () {
     return Inertia\Inertia::render('HomePage');
 })->name('tracking');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia\Inertia::render('Dashboard');
-})->name('dashboard');
+// Action Buttons Routes
+Route::get('/request-quote', function () {
+    return Inertia\Inertia::render('QuotePage');
+})->name('quote');
+
+// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//     return Inertia\Inertia::render('Dashboard');
+// })->name('dashboard');
+
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+    Route::get('/dashboard', function () {
+        return Inertia\Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::get('/Riders-Management', function () {
+        return Inertia\Inertia::render('RidersPage');
+    })->name('riders');
+
+    Route::get('/Manage-Feedbacks', function () {
+        return Inertia\Inertia::render('FeedbackPage');
+    })->name('feedback');
+});

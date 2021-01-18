@@ -2,10 +2,12 @@
     <div id="app-layout">
         <quick-action-bar></quick-action-bar>
         <!-- White Header with Navs -->
-        <header class="xl:px-0 sticky top-0 bg-gray-100 shadow">
+        <header class="xl:px-0 sticky top-0 bg-gray-100 shadow" style="z-index:2;">
             <div class="container mx-auto max-w-7xl grid lg:grid-cols-3 grid-cols-1">
                 <div class="py-2 px-4">
-                    <img src="/images/logo.png" alt="logo" class="h-12 inline-block">
+                    <inertia-link :href="route('home')">
+                        <img src="/images/logo.png" alt="logo" class="h-12 inline-block">
+                    </inertia-link>
                     <!-- Hamburger -->
                     <div class="mr-2 mt-2 flex float-right items-center sm:hidden">
                         <button @click="showDropdown = ! showDropdown" class="inline-flex items-center justify-center rounded-md text-gray-400 focus:outline-none ml-auto mr-2 transition duration-150 ease-in-out">

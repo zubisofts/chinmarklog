@@ -16,7 +16,7 @@
 
         <div class="mt-4 flex items-center justify-between">
             <form method="POST" action="{{ route('verification.send') }}">
-                @csrf
+                @csrf 
 
                 <div>
                     <x-jet-button type="submit">

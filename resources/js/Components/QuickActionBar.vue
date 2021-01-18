@@ -16,7 +16,7 @@
                             Call <span class="hidden md:inline">Now</span>
                         </strong>
                     </inertia-link>
-                    <inertia-link href="#" class="text-sm mr-2">
+                    <inertia-link :href="route('quote')" class="text-sm mr-2">
                         <strong>
                             <font-awesome-icon :icon="['far','file-alt']" />
                             <span class="hidden md:inline">Request</span> Quote

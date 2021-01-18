@@ -13,7 +13,7 @@
                             <font-awesome-icon  icon="phone-square-alt" style="font-size:1.3rem;" class="mt-1 mx-auto" />
                         </button>
                     </inertia-link>
-                    <inertia-link href="#" class="my-1 block">
+                    <inertia-link :href="route('quote')" class="my-1 block">
                         <button type="button" @click="show = !show" class="rounded-full w-9 h-9 bg-red-600 text-white">
                             <font-awesome-icon :icon="['far','file-alt']" style="font-size:1.3rem;" class="mt-1 mx-auto" />
                         </button>
