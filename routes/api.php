@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RiderController;
+use App\Http\Controllers\ParcelController;
 use App\Http\Controllers\ContactController;
 
 /*
@@ -35,4 +36,13 @@ Route::group(['prefix' => 'contacts'], function () {
     Route::post('store', [ContactController::class, 'store']);
     Route::post('fetch', [ContactController::class, 'fetch']);
     Route::post('update', [ContactController::class, 'update']);
+});
+
+Route::group(['prefix' => 'parcel'], function () {
+    Route::post('request_pickup', [ParcelController::class, 'request_pickup']);
+
+    // Parcel Categories Management Routes in the Parcel Route Group
+    Route::group(['prefix' => 'category'], function () {
+        Route::post('fetch', [ParcelController::class, 'fetch_category']);
+    });
 });

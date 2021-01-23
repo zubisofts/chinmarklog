@@ -12,7 +12,7 @@ Route::get('/about', function () {
 })->name('about');
 
 Route::get('/services', function () {
-    return Inertia\Inertia::render('HomePage');
+    return Inertia\Inertia::render('ServicesPage');
 })->name('services');
 
 Route::get('/faq', function () {
@@ -24,7 +24,7 @@ Route::get('/reviews', function () {
 })->name('reviews');
 
 Route::get('/contact', function () {
-    return Inertia\Inertia::render('HomePage');
+    return Inertia\Inertia::render('ContactPage');
 })->name('contact');
 
 Route::get('/tracking', function () {
