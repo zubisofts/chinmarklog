@@ -3,6 +3,9 @@
         <div style="z-index:1;" class="bg-gray-100">
             <home-slider />
         </div>
+        <div style="height:1500px;" class="bg-gray-100">
+            
+        </div>
     </app-layout>
 </template>
 
