@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RiderController;
 use App\Http\Controllers\ParcelController;
 use App\Http\Controllers\ContactController;
@@ -64,3 +65,5 @@ Route::group(['prefix' => 'parcel'], function () {
 Route::group(['prefix' => 'home'], function () {
 
 });
+
+Route::get('login', [HomeController::class, 'login']);
