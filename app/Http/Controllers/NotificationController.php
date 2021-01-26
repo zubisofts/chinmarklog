@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class NotificationController extends Controller
 {
@@ -26,4 +27,10 @@ class NotificationController extends Controller
         
         self::store($message, $category, $link);
     }
+
+    public function fetch()
+    {
+        $notify = notification::all();
+        return $notify;
+    } 
 }

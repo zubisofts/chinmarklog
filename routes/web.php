@@ -49,7 +49,18 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         return Inertia\Inertia::render('RidersPage');
     })->name('riders');
 
+    Route::get('/Manage-Parcels', function () {
+        return Inertia\Inertia::render('ParcelPage');
+    })->name('parcels');
+
     Route::get('/Manage-Feedbacks', function () {
         return Inertia\Inertia::render('FeedbackPage');
     })->name('feedback');
+    
+    Route::get('/Manage-Offices', function () {
+        return Inertia\Inertia::render('BranchPage');
+    })->name('branch');
+    
+    Route::get('/Tester', ['App\Http\Controllers\NotificationController', 'fetch']);
+    
 });

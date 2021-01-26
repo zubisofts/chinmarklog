@@ -38,11 +38,29 @@ Route::group(['prefix' => 'contacts'], function () {
     Route::post('update', [ContactController::class, 'update']);
 });
 
+// Parcels
 Route::group(['prefix' => 'parcel'], function () {
+    // Parcel Management
+    Route::post('store', [ParcelController::class, 'store']);
+    Route::post('fetch', [ParcelController::class, 'fetch']);
     Route::post('request_pickup', [ParcelController::class, 'request_pickup']);
+
+    // Branch Offices/State Management
+    Route::post('store_state', [ParcelController::class, 'store_state']);
+    Route::post('fetch_states', [ParcelController::class, 'fetch_states']);
+    Route::delete('delete_state', [ParcelController::class, 'delete_state']);
+    Route::post('store_branch', [ParcelController::class, 'store_branch']);
+    Route::post('fetch_branch', [ParcelController::class, 'fetch_branch']);
 
     // Parcel Categories Management Routes in the Parcel Route Group
     Route::group(['prefix' => 'category'], function () {
         Route::post('fetch', [ParcelController::class, 'fetch_category']);
+        Route::post('store', [ParcelController::class, 'store_category']);
+        Route::delete('delete', [ParcelController::class, 'delete_category']);
     });
+});
+
+// General Routes -> HomeController (Home)
+Route::group(['prefix' => 'home'], function () {
+
 });
