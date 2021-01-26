@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\rider;
 use App\Models\branch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class RiderController extends Controller
@@ -40,6 +42,7 @@ class RiderController extends Controller
                 $rider->motorcycle = $request->details;
                 $rider->branch_id = $request->branch;
                 if($rider->save()){
+                    $createuser = $this->NewUser($rider->firstname, $rider->lastname, $rider->phone, $rider->email );
                     return json_encode([
                         'status' => 'success',
                         'rider_id' => $rider->id,
@@ -65,6 +68,20 @@ class RiderController extends Controller
             ]);
         }
         return $request;
+    }
+
+    public function NewUser($fname, $lname, $phone, $email)
+    {
+        if(!User::where('email', $email)->orWhere('phone', $phone)->exists()){
+            return User::create([
+                'firstname' => $fname,
+                'lastname' => $lname !='' ? $lname : null,
+                'phone' => $phone,
+                'email' => $email,
+                'usertype' => '1',
+                'password' => Hash::make('12345678'),
+            ]);
+        }
     }
 
     public function fetch(Request $request)

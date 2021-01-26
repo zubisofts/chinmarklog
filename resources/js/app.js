@@ -12,14 +12,17 @@ import PortalVue from 'portal-vue';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faBell, faClock, faFileAlt, faHandPointer, faQuestionCircle, faSave, faUser } from '@fortawesome/free-regular-svg-icons';
-import { faArrowLeft, faCar, faCogs, faEnvelope, faGift, faHeadset, faHome, faInfoCircle, faMapMarker, faMotorcycle, faPaperPlane, faPhoneAlt, faPhoneSquareAlt, faPlus, faShare, faShippingFast, faSignOutAlt, faThumbtack, 
-    faTimes, faTruckMoving, faUserCog, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { faFacebookSquare, faInstagram, faRev, faServicestack, faTwitter, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { faArrowLeft, faCalculator, faCar, faCheckCircle, faCircleNotch, faCogs, faEnvelope, faGift, faHandPointDown, faHandPointRight, faHeadset, faHistory, faHome, faHotel, faInfoCircle, 
+    faMapMarker, faMapPin, faMotorcycle, faPaperPlane, faPhoneAlt, faPhoneSquareAlt, faPlus, faShare, faShippingFast, faSignOutAlt, faStopwatch, faThumbtack, 
+    faTimes, faTimesCircle, faTruckMoving, faUserCog, faUsers, faWarehouse } from '@fortawesome/free-solid-svg-icons';
+import { faFacebookSquare, faInstagram, faMarkdown, faRev, faServicestack, faTwitter, faWhatsapp, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
 library.add(faClock, faMapMarker, faHome, faInfoCircle, faCogs, faServicestack, faQuestionCircle, faThumbtack, faRev, 
     faFacebookSquare, faPhoneSquareAlt, faFileAlt, faTwitter, faWhatsapp, faInstagram, faHandPointer, faTruckMoving, 
     faShippingFast, faTimes, faBell, faSignOutAlt, faUsers, faMotorcycle, faPlus, faSave, faHeadset, faUserCog, faCar,
-    faGift, faShare, faUser, faArrowLeft, faPaperPlane, faEnvelope, faPhoneAlt)
+    faGift, faShare, faUser, faArrowLeft, faPaperPlane, faEnvelope, faPhoneAlt, faHistory, faStopwatch, 
+    faMapPin, faCalculator, faWarehouse, faYoutube, faTimesCircle, faCircleNotch, faCheckCircle, faMarkdown, faHandPointRight, 
+    faHandPointDown, faHotel)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.config.productionTip = false

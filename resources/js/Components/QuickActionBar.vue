@@ -7,7 +7,7 @@
                     <inertia-link href="#" class="text-sm mr-2">
                         <strong>
                             <font-awesome-icon :icon="['fas','shipping-fast']" />
-                            <span class="hidden md:inline">Instant</span> Delivery
+                            <span class="hidden md:inline">Instant</span> Pickup
                         </strong>
                     </inertia-link>
                     <inertia-link href="#" class="text-sm mr-2">

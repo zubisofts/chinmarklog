@@ -24,8 +24,14 @@
             </div>
         </header>
 
+        <slot name="banner">
+            
+        </slot>
+
         <!-- Page Details -->
         <slot></slot>
+
+        <footer-component></footer-component>
     </div>
 </template>
 
@@ -34,11 +40,12 @@
 </style>
 
 <script>
+import FooterComponent from '../Components/FooterComponent.vue';
 import MainNavbar from "../Components/MainNavbar.vue";
 import QuickActionBar from "../Components/QuickActionBar.vue";
 
 export default {
-    components: { MainNavbar, QuickActionBar },
+    components: { MainNavbar, QuickActionBar, FooterComponent },
     data(){
         return {
             showDropdown: false

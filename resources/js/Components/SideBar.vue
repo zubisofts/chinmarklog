@@ -1,5 +1,5 @@
 <template>
-    <div id="side_bar" class="bg-gray-900 h-full fixed transition-all overflow-auto duration-150 ease-in-out" :class="{'open': openState}">
+    <div id="side_bar" class="bg-gray-900 shadow h-full fixed transition-all overflow-auto duration-150 ease-in-out" :class="{'open': openState}">
               
         <div class="user-details mt-5">
             <div class="text-center px-4">
@@ -64,8 +64,16 @@
             </inertia-link> -->
 
             <span v-if="$page.user.usertype > 1">
+
                 <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                    href="/Riders-Management" :active="$page.currentRouteName == 'riders'">
+                    href="/Manage-Offices" :active="$page.currentRouteName == 'branch'">
+                    <font-awesome-icon :icon="['fas','hotel']" class="text-xl" />
+
+                    <span class="mx-3">Branch Offices</span>
+                </inertia-link>
+
+                <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                    href="/Manage-Parcels" :active="$page.currentRouteName == 'parcels'">
                     <font-awesome-icon :icon="['fas','gift']" class="text-xl" />
 
                     <span class="mx-3">Parcel Management</span>

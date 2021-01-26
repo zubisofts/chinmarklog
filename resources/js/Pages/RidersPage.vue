@@ -69,7 +69,7 @@
                     </div>
                     <div class="mb-4">
                         <label :class="labelStyles" for="mdetails"> Motorcycle Details <small>(Optional)</small> </label>
-                        <input :class="inputStyles" id="mdetails" type="text" required v-model="mdetails" placeholder="Motorcycle Details (Optional)" />
+                        <input :class="inputStyles" id="mdetails" type="text" v-model="mdetails" placeholder="Motorcycle Details (Optional)" />
                     </div>
                     <div class="mb-4">
                         <label :class="labelStyles" for="branch"> Select Branch </label>
@@ -117,7 +117,7 @@
                 showModal: false,
                 labelStyles:'block text-gray-700 font-bold mb-1',
                 inputStyles:`bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 
-                                leading-tight focus:outline-none focus:bg-white border focus:border-black`,
+                                leading-tight focus:outline-none focus:bg-white border focus:border-red-500`,
                 lname:'',
                 fname:'',
                 phone: '',

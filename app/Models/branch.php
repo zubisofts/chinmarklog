@@ -13,4 +13,9 @@ class branch extends Model
     {
         return $this->hasMany('App\Models\rider');
     }
+
+    public function state()
+    {
+        return $this->belongsTo('App\Models\state', 'state_id');
+    }
 }

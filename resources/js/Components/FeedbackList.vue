@@ -57,20 +57,20 @@
                 class="inline-block min-w-full shadow rounded-lg overflow-hidden"
             >
                 <table class="min-w-full leading-normal">
-                <thead class="bg-gray-800 text-gray-100 font-bold">
+                <thead class="bg-red-600 text-white font-bold">
                     <tr>
                     <th
-                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider"
                     >
                         Customer
                     </th>
                     <th
-                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                        class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider"
                     >
                         Subject
                     </th>
                     <th
-                        class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell"
+                        class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider hidden md:table-cell"
                     >
                         Date
                     </th>

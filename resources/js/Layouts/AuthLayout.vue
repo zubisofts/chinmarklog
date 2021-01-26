@@ -15,9 +15,7 @@
                     <slot name="header"></slot>
                     <div class="flex-1 text-right">
                         <div class="inline-flex align-middle items-center mr-4 p-2">
-                            <strong>
-                                <font-awesome-icon :icon="['far','bell']" style="font-size:1.3rem;" />
-                            </strong>
+                            <notifications></notifications>
                         </div>
                         <!-- Hamburger -->
                         <button @click="showingNavigationDropdown = ! showingNavigationDropdown" class="md:hidden inline-flex mr-2 items-center border justify-center p-1 align-middle rounded text-gray-400 hover:text-gray-500 outline focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
@@ -41,10 +39,11 @@
 <script>
 import SideBar from "../Components/SideBar";
 import httpClient from '../Mixins/HttpClient';
+import Notifications from "../Components/Notifications";
 
 export default {
     components:{
-        SideBar
+        SideBar, Notifications
     },
     data() {
         return {
