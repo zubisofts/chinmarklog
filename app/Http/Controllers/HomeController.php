@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -15,10 +16,12 @@ class HomeController extends Controller
             'password' => ['required']
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::all();
+
+        return $user;
 
         if(!$user || !Hash::check($request->password, $user->password)){
-            throw ValidationException::withMessage([
+            throw ValidationException::withMessages([
                 'email' => ['Invalid login credentails']
             ]);
         }else{
