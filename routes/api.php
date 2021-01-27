@@ -67,3 +67,4 @@ Route::group(['prefix' => 'home'], function () {
 });
 
 Route::get('login', [HomeController::class, 'login']);
+Route::get('register', [HomeController::class, 'register']);
