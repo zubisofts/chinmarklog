@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -16,11 +17,9 @@ class HomeController extends Controller
             'password' => ['required']
         ]);
 
-        $user = User::where('email', $request->email)->get();
+        $user = User::where('email', $request->email)->first();
         
-        // if(!$user || !Hash::check($request->password, $user->password)){
-            return $user;
-        if(count($user) < 1 || !Hash::check($request->password, $user->password)){
+        if(is_null($user) || !Hash::check($request->password, $user->password)){
             return json_encode([
                 'status' => 'error',
                 'code' => 'error',
@@ -30,21 +29,16 @@ class HomeController extends Controller
             //     'email' => ['Invalid login credentails']
             // ]);
         }else{
-            return 'Hello';
-            return $user;
-            // return json_encode(['email' => ['Successful']]);
             $token = $user->createToken('Auth User')->accessToken;
             return json_encode([
                 'user' => $user,
-                'token' => $token
+                'token' => $token->token
             ]);
         }
     }
 
     public function register(Request $request)
     {
-
-        // return $request;
         if(!User::where('email', $request->email)->orWhere('phone', $request->phone)->exists()){
             return User::create([
                 'firstname' => $request->fname,
