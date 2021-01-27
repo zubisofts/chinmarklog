@@ -29,4 +29,22 @@ class HomeController extends Controller
             ]);
         }
     }
+
+    public function register(Request $request)
+    {
+        if(!User::where('email', $request->email)->orWhere('phone', $request->phone)->exists()){
+            return User::create([
+                'firstname' => $request->fname,
+                'lastname' => $request->lname !='' ? $request->lname : null,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'usertype' => '1',
+                'password' => Hash::make('12345678'),
+            ]);
+        }else{
+            throw ValidationException::withMessage([
+                'email' => ['User already exist!']
+            ]);
+        }
+    }
 }
