@@ -8,6 +8,10 @@ class HomeController extends Controller
 {
     public function login(Request $request)
     {
-        return 'Hello';
+        return json_encode([
+            'status'=>'success',
+            'msg' => 'Hello world',
+            'data'=>$request
+        ]);
     }
 }
