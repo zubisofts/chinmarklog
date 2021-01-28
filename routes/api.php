@@ -18,7 +18,7 @@ use App\Http\Controllers\ContactController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
@@ -66,5 +66,11 @@ Route::group(['prefix' => 'home'], function () {
 
 });
 
-Route::get('login', [HomeController::class, 'login']);
+Route::post('login', [HomeController::class, 'login']);
 Route::get('register', [HomeController::class, 'register']);
+// Route::get('check-users', [HomeController::class, 'checkUsers']);
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/check-users', [HomeController::class, 'checkUsers']);
+    Route::get('/logout', [HomeController::class, 'logout']);
+});

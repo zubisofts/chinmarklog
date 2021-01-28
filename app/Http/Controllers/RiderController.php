@@ -73,7 +73,7 @@ class RiderController extends Controller
     public function NewUser($fname, $lname, $phone, $email)
     {
         if(!User::where('email', $email)->orWhere('phone', $phone)->exists()){
-            return User::create([
+            $user = User::create([
                 'firstname' => $fname,
                 'lastname' => $lname !='' ? $lname : null,
                 'phone' => $phone,
@@ -81,6 +81,7 @@ class RiderController extends Controller
                 'usertype' => '1',
                 'password' => Hash::make('12345678'),
             ]);
+            $accessToken = $user->createToken('authToken')->accessToken;
         }
     }
 
