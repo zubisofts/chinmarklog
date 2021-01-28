@@ -129,18 +129,26 @@
     <modal-component :prop-show="showDetails" @closeModal="closeModal()">
         <div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- <div>
-                    <img :src="`/storage/images/riders/${sel_rider.photo}`" alt="" class="w-full inline">
-                </div>
-                <div>
-                    <ul>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                    </ul>
-                </div> -->
+                <h2>Parcel Details</h2>
+
+
+                <h2>Assign to Rider</h2>
+                <form @submit.prevent="assignRider">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <label :class="labelStyles" for="sender"> Sender's Name <sup class="text-red-500">*</sup> </label>
+                            <select :class="inputStyles" v-model="sstate">
+                                <option value="all"> All Riders </option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label :class="labelStyles" for="sphone"> Select Rider <sup class="text-red-500">*</sup> </label>
+                            <select :class="inputStyles" v-model="srider">
+                                <option v-for="rider in riders" :key="rider.id" :value="rider.id"> {{ rider.firstname + ' ' +  rider.firstname }} </option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </modal-component>

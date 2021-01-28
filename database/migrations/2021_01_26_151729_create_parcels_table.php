@@ -15,7 +15,7 @@ class CreateParcelsTable extends Migration
     {
         Schema::create('parcels', function (Blueprint $table) {
             $table->id();
-            $table->uuid('trackingid');
+            $table->string('trackingid');
             $table->string('sender');
             $table->string('reciever');
             $table->string('sender_phone');
@@ -31,7 +31,7 @@ class CreateParcelsTable extends Migration
             $table->mediumText('description')->nullable();
             $table->unsignedBigInteger('current_address');
             $table->foreign('current_address')->references('id')->on('states')->onDelete('cascade');
-            $table->enum('status', ['new', 'assigned', 'transit', 'stopped', 'delivered'])->default('new');
+            $table->enum('status', ['unassigned', 'assigned', 'transit', 'stopped', 'delivered'])->default('unassigned');
             $table->timestamps();
         });
     }

@@ -46,7 +46,7 @@ class ParcelController extends Controller
     public function store(Request $request)
     {
         $parcel = new parcel;
-        $parcel->trackingid = \Str::uuid();
+        $parcel->trackingid = \Str::random(6);
         $parcel->sender = $request->sender;
         $parcel->reciever = $request->reciever;
         $parcel->sender_phone = $request->sphone;

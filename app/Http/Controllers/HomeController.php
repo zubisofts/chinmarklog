@@ -37,9 +37,17 @@ class HomeController extends Controller
             $responseArray = [];
             $responseArray['token'] = $user->createToken('auth_user')->accessToken;
             $responseArray['user'] = $user;
-            return response()->json($responseArray, 200);
+            return response()->json([
+                'status' => 'success',
+                'message' => '',
+                'result' => $responseArray
+            ], 200);
         }else{
-            return response()->json(['error' =>'unauthenticated'], 200);
+            return response()->json([
+                'status' =>'error',
+                'message' =>'Invalid login credentials.',
+                'result' => []
+            ], 200);
         }
     }
 
@@ -47,18 +55,39 @@ class HomeController extends Controller
     public function checkUsers(Request $request)
     {
         if($request->user()->tokens()){
-            return response()->json(['current_user'=>$request->user(), 'token' => $request->user()->token()], 200); 
+            return response()->json([
+                'status' =>'success',
+                'message' =>'',
+                'result' => ['user'=>$request->user(), 'token' => $request->user()->token()]
+            ], 200);
         }else{
-            return response()->json(['result'=>'No Token found'], 200);
+            return response()->json([
+                'status' =>'error',
+                'message' =>'No Token found.',
+                'result' => []
+            ], 200);
         }
     }
 
     public function logout(Request $request)
     {
         if($request->user()->tokens()->delete()){
-            return response()->json(['result'=>'Logout Successfull'], 200);
+            return response()->json([
+                'status' =>'success',
+                'message' =>'Logout Successfull',
+                'result' => []
+            ], 200);
         }else{
-            return response()->json(['result' => 'An unexpected error occured!'], 200);
+            return response()->json([
+                'status' =>'error',
+                'message' =>'An unexpected error occured!',
+                'result' => []
+            ], 200);
         }
+    }
+
+    public function retrieveToken(Request $request)
+    {
+        # code...
     }
 }
