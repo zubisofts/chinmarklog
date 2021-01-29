@@ -62,4 +62,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function rider()
+    {
+        return $this->hasOne('App\Models\rider', 'id');
+    }
 }

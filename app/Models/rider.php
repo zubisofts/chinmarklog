@@ -13,4 +13,9 @@ class rider extends Model
     {
         return $this->belongsTo('App\Models\branch', 'branch_id', 'id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Model\User', 'id');
+    }
 }

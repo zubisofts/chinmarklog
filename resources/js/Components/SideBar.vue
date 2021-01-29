@@ -4,8 +4,12 @@
         <div class="user-details mt-5">
             <div class="text-center px-4">
                 <div class="text-center">
-                    <jet-nav-link :href="route('profile.show')">
-                        <img class="h-30 w-30 mx-auto rounded-full" :src="$page.user.profile_photo_url" :alt="$page.user.name" />
+                    <jet-nav-link :href="route('profile.show')" v-if="$page.user.type > 1">
+                        <img class="h-20 w-20 mx-auto rounded-full" :src="$page.user.profile_photo_url" :alt="$page.user.firstname" />
+                    </jet-nav-link>
+                    <jet-nav-link :href="route('profile.show')" v-else>
+                        <input type="hidden" :value="$page.user.id" :title="$page.user.usertype" id="hidden_email_input">
+                        <img class="h-20 w-20 mx-auto rounded-full" :src="rider_photo != '' ? `/storage/images/riders/${rider_photo}` : ''" :alt="$page.user.firstname" />
                     </jet-nav-link>
                 </div>
 
@@ -114,6 +118,14 @@
                     <span class="mx-3">Contacts/Feedbacks</span>
                 </inertia-link>
             </span>
+            <span v-else>
+                <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                    href="/Parcels" :active="$page.currentRouteName == 'rider_parcel'">
+                    <font-awesome-icon icon="gift" class="text-xl" />
+
+                    <span class="mx-3">Parcels</span>
+                </inertia-link>
+            </span>
 
             <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
                 href="" @click.prevent="logout()">
@@ -137,18 +149,34 @@ export default {
     },
     data(){
         return{
-            
+            rider_photo:''
         }
+    },
+    mounted(){
+        let userid = document.getElementById('hidden_email_input').value;
+        let usertype = document.getElementById('hidden_email_input').getAttribute('title');
+        this.riderPhoto(userid, usertype);
     },
     methods:{
         logout(){
-            httpClient.client.post('http://chinmarklog.com/logout')
+            HttpClient.client.post('http://chinmarklog.com/logout')
             .then((res) => {
                 window.location.href = '/';
             })
             .catch((error)=>{
                 
             })
+        },
+        riderPhoto(user_id, type){
+            if (type == 1) {
+                HttpClient.client.post('/riders/fetch_photo', {id:user_id})
+                .then((res) => {
+                    this.rider_photo = res.data
+                })
+                .catch((error)=>{
+                    
+                })
+            }
         }
     }
 }
