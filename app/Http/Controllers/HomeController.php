@@ -37,17 +37,24 @@ class HomeController extends Controller
             $responseArray = [];
             $responseArray['token'] = $user->createToken('auth_user')->accessToken;
             $responseArray['user'] = $user;
-            return response()->json([
+            return response(json_encode([
                 'status' => 'success',
                 'message' => '',
                 'result' => $responseArray
-            ], 200);
+            ]), 200);
+            // return response()->json([
+            //     'status' => 'success',
+            //     'message' => '',
+            //     'result' => $responseArray
+            // ], 200);
         }else{
-            return response()->json([
+            return response(json_encode(
+                [
                 'status' =>'error',
                 'message' =>'Invalid login credentials.',
                 'result' => []
-            ], 200);
+                ]
+            ), 200);
         }
     }
 
