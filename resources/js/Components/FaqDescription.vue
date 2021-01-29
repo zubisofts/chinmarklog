@@ -7,7 +7,7 @@
                     
                     <div id="app" class="container mx-auto bg-white border-grey-light border">
                         <accordion title="How do we work?">
-                        <p class="pb-5">Coming soon...</p>
+                        <p class="pb-5">Coming soon....</p>
                         </accordion>
                         <accordion title="What services do we offer?">
                         <p class="pb-5">Coming soon...</p>
