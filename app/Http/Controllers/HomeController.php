@@ -122,7 +122,7 @@ class HomeController extends Controller
             $parcel->update();
             return response(json_encode([
                 'status' => 'success',
-                'message' => 'Parcel Declined Successfully',
+                'message' => 'Parcel Declined Successfully.',
                 'result' => []
             ]), 200);
         }else{
