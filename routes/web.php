@@ -8,7 +8,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/about', function () {
-    return Inertia\Inertia::render('HomePage');
+    return Inertia\Inertia::render('AboutPage');
 })->name('about');
 
 Route::get('/services', function () {
@@ -16,7 +16,7 @@ Route::get('/services', function () {
 })->name('services');
 
 Route::get('/faq', function () {
-    return Inertia\Inertia::render('HomePage');
+    return Inertia\Inertia::render('FaqPage');
 })->name('faq');
 
 Route::get('/reviews', function () {
