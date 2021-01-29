@@ -41,17 +41,17 @@ class HomeController extends Controller
             $responseArray['token'] = $user->createToken('auth_user')->accessToken;
             $responseArray['user'] = $user;
             $responseArray['as_rider'] = rider::where('email', $user->email)->first();
-            return response()->json([
+            return response(json_encode([
                 'status' => 'success',
                 'message' => '',
                 'result' => $responseArray
-            ], 200);
+            ]), 200);
         }else{
-            return response()->json([
+            return response(json_encode([
                 'status' =>'error',
                 'message' =>'Invalid login credentials.',
                 'result' => []
-            ], 200);
+            ]), 200);
         }
     }
 
@@ -59,34 +59,34 @@ class HomeController extends Controller
     public function checkUsers(Request $request)
     {
         if($request->user()->tokens()){
-            return response()->json([
+            return response(json_encode([
                 'status' =>'success',
                 'message' =>'',
                 'result' => ['user'=>$request->user(), 'token' => $request->user()->token()]
-            ], 200);
+            ]), 200);
         }else{
-            return response()->json([
+            return response(json_encode([
                 'status' =>'error',
                 'message' =>'No Token found.',
                 'result' => []
-            ], 200);
+            ]), 200);
         }
     }
 
     public function logout(Request $request)
     {
         if($request->user()->tokens()->delete()){
-            return response()->json([
+            return response(json_encode([
                 'status' =>'success',
                 'message' =>'Logout Successfull',
                 'result' => []
-            ], 200);
+            ]), 200);
         }else{
-            return response()->json([
+            return response(json_encode([
                 'status' =>'error',
                 'message' =>'An unexpected error occured!',
                 'result' => []
-            ], 200);
+            ]), 200);
         }
     }
 
@@ -104,13 +104,13 @@ class HomeController extends Controller
         foreach ($assigned as $value) {
             array_push($parcelArray, $value->parcel);
         }
-        return response()->json([
+        return response(json_encode([
             'status' => 'success',
             'message' => '',
             'result' => [
                     'parcel_list' => $parcelArray
                 ]
-        ], 200);
+        ]), 200);
     }
 
     public function decline_parcel(Request $request)
@@ -120,17 +120,17 @@ class HomeController extends Controller
             $parcel = parcel::where('id', $request->parcelid)->first();
             $parcel->status = 'unassigned';
             $parcel->update();
-            return response()->json([
+            return response(json_encode([
                 'status' => 'success',
                 'message' => 'Parcel Declined Successfully',
                 'result' => []
-            ], 200);
+            ]), 200);
         }else{
-            return response()->json([
+            return response(json_encode([
                 'status' =>'error',
                 'message' =>'Could not decline the request!',
                 'result' => []
-            ], 200);
+            ]), 200);
         }
     }
     
@@ -141,17 +141,17 @@ class HomeController extends Controller
             $parcel = parcel::where('id', $request->parcelid)->first();
             $parcel->status = 'transit';
             $parcel->update();
-            return response()->json([
+            return response(json_encode([
                 'status' => 'success',
                 'message' => 'Parcel Confirmed successfully and now on transit',
                 'result' => []
-            ], 200);
+            ]), 200);
         }else{
-            return response()->json([
+            return response(json_encode([
                 'status' =>'error',
                 'message' =>'You do not have the permission to confirm this parcel.',
                 'result' => []
-            ], 200);
+            ]), 200);
         }
     }
 
