@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class parcel extends Model
 {
     use HasFactory;
+
+    public function assign()
+    {
+        return $this->hasOne('App\Models\assigned_parcel', 'id');
+    }
 }

@@ -60,6 +60,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/Manage-Offices', function () {
         return Inertia\Inertia::render('BranchPage');
     })->name('branch');
+
+    Route::get('/Parcels', function () {
+        return Inertia\Inertia::render('RiderParcelPage');
+    })->name('rider_parcel');
     
     Route::get('/Tester', ['App\Http\Controllers\NotificationController', 'fetch']);
     

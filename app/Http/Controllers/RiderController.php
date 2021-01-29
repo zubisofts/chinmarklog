@@ -73,7 +73,7 @@ class RiderController extends Controller
     public function NewUser($fname, $lname, $phone, $email)
     {
         if(!User::where('email', $email)->orWhere('phone', $phone)->exists()){
-            return User::create([
+            $user = User::create([
                 'firstname' => $fname,
                 'lastname' => $lname !='' ? $lname : null,
                 'phone' => $phone,
@@ -81,13 +81,14 @@ class RiderController extends Controller
                 'usertype' => '1',
                 'password' => Hash::make('12345678'),
             ]);
+            $accessToken = $user->createToken('authToken')->accessToken;
         }
     }
 
     public function fetch(Request $request)
     {
         // Check if there is a filter and filter the query
-        if($request->filter == ''){
+        if($request->filter == '' || $request->filter == '0' || $request->filter == 'all'){
             $riders = rider::orderBy('firstname', 'ASC')->get();
         }else{
             $riders = rider::where('firstname', 'like', '%' . $request->filter . '%')
@@ -106,5 +107,14 @@ class RiderController extends Controller
     {
         $branches = branch::all();
         return $branches;
+    }
+
+    public function fetch_photo(Request $request)
+    {
+        if($request->has('id')){
+            $user = User::where('id', $request->id)->first();
+            $rider = rider::where('email', $user->email)->first();
+            return $rider->photo;
+        }
     }
 }

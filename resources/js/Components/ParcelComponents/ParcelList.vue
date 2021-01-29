@@ -10,7 +10,7 @@
                         class="appearance-none h-full rounded-l border block appearance-none w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     >
                         <option value="all">All</option>
-                        <option value="new">New</option>
+                        <option value="unassigned">Unassigned</option>
                         <option value="assigned">Assigned</option>
                         <option value="on_transit">On Transit</option>
                         <option value="delivered">Delivered</option>
@@ -103,7 +103,7 @@
                         </p>
                     </td>
                     <td
-                        class="px-5 py-5 border-b border-gray-200 bg-white text-sm"
+                        class="px-5 py-5 border-b border-gray-200 bg-white text-sm" :class="parcel.status"
                     >
                         <p class="text-gray-900 whitespace-no-wrap">
                             {{ parcel.status }}
@@ -128,19 +128,47 @@
     <!-- Modal -->
     <modal-component :prop-show="showDetails" @closeModal="closeModal()">
         <div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <!-- <div>
-                    <img :src="`/storage/images/riders/${sel_rider.photo}`" alt="" class="w-full inline">
+            <div class="">
+                <div class="mb-4">
+                    <h2 class="text-lg font-bold">
+                        Parcel Details
+                    </h2>
                 </div>
-                <div>
-                    <ul>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                    </ul>
-                </div> -->
+            </div>
+            <hr>
+            <div v-if="sel_parcel.status == 'unassigned' || sel_parcel.status == 'assigned'">
+                <div class="mb-4">
+                    <h2 class="text-lg font-bold">
+                        Assign Riders
+                    </h2>
+                </div>
+                <form @submit.prevent="assignRider(sel_parcel.id)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="mb-4">
+                            <!-- <label :class="labelStyles" for="sender"> Filter Riders<sup class="text-red-500">*</sup> </label> -->
+                            <select :class="inputStyles" v-model="sstate">
+                                <option value="0"> All Riders </option>
+                                <option v-for="state in states" :key="state.id" :value="state.id"> {{ 'Riders in ' + state.name }} </option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <!-- <label :class="labelStyles" for="sphone"> Select a Rider <sup class="text-red-500">*</sup> </label> -->
+                            <select :class="inputStyles" v-model="srider" required>
+                                <option value=""> Select A Rider </option>
+                                <option v-for="rider in riders" :key="rider.id" :value="rider.id"> {{ rider.firstname + ' ' +  rider.lastname }} </option>
+                            </select>
+                        </div>
+                        <!-- Button -->
+                        <div class="mb-4">
+                            <button type="submit" class="col-span-2 mx-1 rounded-md border border-transparent px-2 py-1 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-black focus:outline-none focus:border-yellow-700 focus:shadow-outline-yellow transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                                Assign
+                                <font-awesome-icon :icon="['fas', 'motorcycle']" />   
+                                <font-awesome-icon :icon="['fas', 'arrow-right']" />   
+                                <font-awesome-icon :icon="['fas', 'gift']" />   
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </modal-component>
@@ -160,11 +188,18 @@ props: {
 components:{ModalComponent},
 data() {
     return {
-    parcels: [],
-    action:false, 
-    showDetails:false,
-    sel_parcel:{},
-    filter:'all'
+        labelStyles:'block text-gray-700 font-bold mb-1',
+        inputStyles:`bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 
+                        leading-tight focus:outline-none focus:bg-white border focus:border-red-500`,
+        parcels: [],
+        action:false, 
+        showDetails:false,
+        sel_parcel:{},
+        filter:'all',
+        srider:'',
+        sstate:'0',
+        states:[],
+        riders:[]
     };
 },
 watch:{
@@ -176,6 +211,8 @@ watch:{
 },
 mounted() {
     this.fetchParcelList();
+    this.loadStates();
+    this.fetchRidersList()
 },
 methods: {
     fetchParcelList() {
@@ -196,23 +233,95 @@ methods: {
         console.log(error);
         });
     },
-    handleParcelList(list) {
-        this.parcels = list;
-    },
-    closeModal(){
-        this.showDetails = false;
-        this.sel_rider = {};
-    },
-    viewDetails(parcel){
-        this.sel_parcel = parcel;
-        this.showDetails = true;
-    }
+    loadStates(){
+            HttpClient.client
+            .post("/parcel/fetch_states")
+            .then((response) => {
+                this.states = response.data;
+            })
+            .catch((error) => {
+                if(error.response){
+                    console.log(error.response.message.data);
+                }else{
+                    alert('An error occured due to Network!');
+                }
+            });
+        },
+        closeModal(){
+            this.showCategories = false;
+            this.showAddModal = false;
+        },
+        handleParcelList(list) {
+            this.parcels = list;
+        },
+        closeModal(){
+            this.showDetails = false;
+            this.sel_rider = {};
+        },
+        viewDetails(parcel){
+            this.sel_parcel = parcel;
+            this.showDetails = true;
+        },
+        fetchRidersList() {
+            HttpClient.client
+                .post('/riders/fetch', {filter: this.sstate, filter_by:'id'})
+                .then((response) => {
+                    this.riders = response.data;
+                })
+                .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log("An error occoured probably due to network!");
+                }
+                // console.log(error);
+            });
+        },
+        assignRider(parcelid){
+            let data = {
+                parcelid: parcelid,
+                riderid: this.srider
+            }
+            HttpClient.client
+                .post('/parcel/asign_rider', data)
+                .then((response) => {
+                    this.handleAssignSuccess(response.data)
+                })
+                .catch((error) => {
+                if (error.response) {
+                    console.log(error.response.data.message);
+                } else {
+                    console.log("An error occoured probably due to network!");
+                }
+                // console.log(error);
+            });
+        },
+        handleAssignSuccess(res){
+            if(res.status == 'success'){
+                this.fetchParcelList();
+                this.closeModal();
+            }else{
+                console.log(res);
+            }
+        }
 },
 };
 </script>
 
 <style scoped>
     tr.unseen{
+        font-weight: bold;
+    }
+    td.unassigned p{
+        color:black;
+        font-weight: bold;
+    }
+    td.assigned p{
+        color: blue;
+        font-weight: bold;
+    }
+    td.transit p{
+        color: green;
         font-weight: bold;
     }
 </style>

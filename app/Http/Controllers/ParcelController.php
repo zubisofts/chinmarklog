@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\rider;
 use App\Models\state;
 use App\Models\branch;
 use App\Models\parcel;
 use Illuminate\Http\Request;
 use App\Models\parcel_pickup;
+use App\Models\assigned_parcel;
 use App\Models\parcel_category;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\NotificationController;
 
 class ParcelController extends Controller
@@ -46,7 +49,7 @@ class ParcelController extends Controller
     public function store(Request $request)
     {
         $parcel = new parcel;
-        $parcel->trackingid = \Str::uuid();
+        $parcel->trackingid = \Str::random(6);
         $parcel->sender = $request->sender;
         $parcel->reciever = $request->reciever;
         $parcel->sender_phone = $request->sphone;
@@ -74,6 +77,85 @@ class ParcelController extends Controller
     {
         $parcel = parcel::orderBy('created_at', 'DESC')->get();
         return $parcel;
+    }
+
+    public function asign_rider(Request $request)
+    {
+        if(!assigned_parcel::where('rider_id', $request->riderid)->where('parcel_id', $request->parcelid)->exists()){
+            $assign = new assigned_parcel;
+            $assign->parcel_id = $request->parcelid;
+            $assign->rider_id = $request->riderid;
+            $assign->description = 'Parcel with Parcel ID ' . $request->parcelid . ' assigned to rider with ID ' . $request->riderid;
+            if($assign->save()){
+                $parcel = parcel::where('id', $assign->parcel_id)->first();
+                $parcel->status = 'assigned';
+                $parcel->update();
+                return response()->json([
+                    'status' => 'success'
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'An unexpected error occured!'
+                ], 200);
+            }
+        }else{
+            $parcel = parcel::where('id', $request->parcelid)->first();
+            $parcel->status = 'assigned';
+            $parcel->update();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Detected existing assignment for the parcel'
+            ], 200);
+        }
+    }
+
+    // MANAGE PARCEL FOR RIDERS
+    public function fetch_rider_parcel_list(Request $request)
+    {
+        $rider = rider::where('email', $request->user['email'])->first();
+        $parcelArray = [];
+        $assigned = assigned_parcel::where('rider_id', $rider->id)->get();
+        foreach ($assigned as $value) {
+            array_push($parcelArray, $value->parcel);
+        }
+        return $parcelArray;
+    }
+
+    public function decline_parcel(Request $request)
+    {
+        $rider = rider::where('email', $request->user['email'])->first();
+        if(assigned_parcel::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->delete()){
+            $parcel = parcel::where('id', $request->parcelid)->first();
+            $parcel->status = 'unassigned';
+            $parcel->update();
+            return response()->json([
+                'status' => 'success'
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Could not decline the request!'
+            ], 200);
+        }
+    }
+    
+    public function confirm_parcel(Request $request)
+    {
+        $rider = rider::where('email', $request->user['email'])->first();
+        if(assigned_parcel::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->exists()){
+            $parcel = parcel::where('id', $request->parcelid)->first();
+            $parcel->status = 'transit';
+            $parcel->update();
+            return response()->json([
+                'status' => 'success'
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You do not have the permission to confirm this parcel.'
+            ], 200);
+        }
     }
 
 
