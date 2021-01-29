@@ -1,10 +1,10 @@
 <template>
     <div id="services_stat">
         <div class="" id="red_bg">
-            <div class="container max-w-6xl py-6 mx-auto grid grid-cols-4 md:grid-cols-4 lg:grid-cols-4 sm:grid-cols-2 gap-4" id="top_stat_hd">
-                <div class="col-span-1" id="stat_side" data-aos="fade-right" style="color:#ffffff">
+            <div class="container max-w-6xl py-6 mx-auto grid grid-cols-1 lg:grid-cols-4 gap-4" id="top_stat_hd">
+                <div class="lg:col-span-1 text-center" id="stat_side" data-aos="fade-right" style="color:#ffffff">
                     <aside class="mb-5">
-                        <h1 class="font-bold text-2xl md:text-3xl text-right">BASE FACTS AND FIGURES</h1>
+                        <h1 class="font-bold text-2xl md:text-3xl text-center">BASE FACTS AND FIGURES</h1>
                     </aside>
                     <aside class="mb-5">
                         <h1 class="font-bold text-2xl md:text-3xl">{{ statistics.customers }}</h1>
@@ -25,8 +25,8 @@
                         </span>
                     </aside>
                 </div>
-                <div class="col-span-3" data-aos="zoom-in">
-                    <img src="/images/logistic_vehicles.jpg" alt=" " style="max-width:100%;">
+                <div class="lg:col-span-3" data-aos="zoom-in">
+                    <img src="/images/logistic_vehicles.jpg" alt=" " class="mx-auto" style="max-width:100%;">
                 </div>
             </div>
         </div>
