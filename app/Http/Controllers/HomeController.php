@@ -37,15 +37,28 @@ class HomeController extends Controller
     {
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
-            $responseArray = [];
-            $responseArray['token'] = $user->createToken('auth_user')->accessToken;
-            $responseArray['user'] = $user;
-            $responseArray['as_rider'] = rider::where('email', $user->email)->first();
-            return response(json_encode([
-                'status' => 'success',
-                'message' => '',
-                'result' => $responseArray
-            ]), 200);
+            if($user->usertype == 1){
+                // Get rider's details
+                $rider = rider::where('email', $user->email)->first();
+                $rider->branch = $rider->branch; //Fetch his branch office
+                $rider->branch->state = $rider->branch->state; //Fetch his state
+                $responseArray = [];
+                $responseArray['token'] = $user->createToken('auth_user')->accessToken;
+                $responseArray['user'] = $user;
+                $responseArray['as_rider'] = $rider; //Add the rider details to the response
+                return response(json_encode([
+                    'status' => 'success',
+                    'message' => '',
+                    'result' => $responseArray
+                ]), 200);
+            }else{
+                return response(json_encode([
+                    'status' => 'error',
+                    'message' => 'Only riders have access to this app.',
+                    'result' => []
+                ]), 200);
+            }
+            
         }else{
             return response(json_encode([
                 'status' =>'error',
@@ -59,10 +72,19 @@ class HomeController extends Controller
     public function checkUsers(Request $request)
     {
         if($request->user()->tokens()){
+            if($request->user()->usertype == '1'){
+                $rider = rider::where('email', $request->user()->email)->first();
+                $rider->branch = $rider->branch;
+                $rider->branch->state = $rider->branch->state;
+            }
             return response(json_encode([
                 'status' =>'success',
                 'message' =>'',
-                'result' => ['user'=>$request->user(), 'token' => $request->user()->token()]
+                'result' => [
+                        'user'=>$request->user(),
+                        'as_rider'=> $rider ? $rider : '', 
+                        'token' => $request->user()->token()
+                    ]
             ]), 200);
         }else{
             return response(json_encode([
