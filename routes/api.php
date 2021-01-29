@@ -25,6 +25,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['prefix' => 'riders'], function () {
     Route::post('add', [RiderController::class, 'add']);
     Route::post('fetch', [RiderController::class, 'fetch']);
+    Route::post('fetch_photo', [RiderController::class, 'fetch_photo']);
 });
 
 Route::group(['prefix' => 'branch'], function () {
@@ -45,6 +46,7 @@ Route::group(['prefix' => 'parcel'], function () {
     Route::post('store', [ParcelController::class, 'store']);
     Route::post('fetch', [ParcelController::class, 'fetch']);
     Route::post('request_pickup', [ParcelController::class, 'request_pickup']);
+    Route::post('asign_rider', [ParcelController::class, 'asign_rider']);
 
     // Branch Offices/State Management
     Route::post('store_state', [ParcelController::class, 'store_state']);
@@ -58,6 +60,14 @@ Route::group(['prefix' => 'parcel'], function () {
         Route::post('fetch', [ParcelController::class, 'fetch_category']);
         Route::post('store', [ParcelController::class, 'store_category']);
         Route::delete('delete', [ParcelController::class, 'delete_category']);
+    });
+
+    // Rider Parcel Route For Vue.js
+    // /parcel/rider_parcel/fetch_list
+    Route::group(['prefix' => 'rider_parcel'], function () {
+        Route::post('fetch_list', [ParcelController::class, 'fetch_rider_parcel_list']);
+        Route::post('decline', [ParcelController::class, 'decline_parcel']);
+        Route::post('confirm', [ParcelController::class, 'confirm_parcel']);
     });
 });
 
@@ -73,4 +83,7 @@ Route::get('register', [HomeController::class, 'register']);
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/check-users', [HomeController::class, 'checkUsers']);
     Route::get('/logout', [HomeController::class, 'logout']);
+    Route::post('/parcel_list', [HomeController::class, 'parcel_list']);
+    Route::post('/decline', [HomeController::class, 'decline_parcel']);
+    Route::post('/confirm', [HomeController::class, 'confirm_parcel']);
 });

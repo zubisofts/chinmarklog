@@ -88,7 +88,7 @@ class RiderController extends Controller
     public function fetch(Request $request)
     {
         // Check if there is a filter and filter the query
-        if($request->filter == ''){
+        if($request->filter == '' || $request->filter == '0' || $request->filter == 'all'){
             $riders = rider::orderBy('firstname', 'ASC')->get();
         }else{
             $riders = rider::where('firstname', 'like', '%' . $request->filter . '%')
@@ -107,5 +107,14 @@ class RiderController extends Controller
     {
         $branches = branch::all();
         return $branches;
+    }
+
+    public function fetch_photo(Request $request)
+    {
+        if($request->has('id')){
+            $user = User::where('id', $request->id)->first();
+            $rider = rider::where('email', $user->email)->first();
+            return $rider->photo;
+        }
     }
 }
