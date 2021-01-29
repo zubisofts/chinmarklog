@@ -51,7 +51,7 @@ class HomeController extends Controller
             return response(json_encode(
                 [
                 'status' =>'error',
-                'message' =>'Invalid login credentials.',
+                'message' =>'Username or password entered is incorrect, Try again!',
                 'result' => []
                 ]
             ), 200);
