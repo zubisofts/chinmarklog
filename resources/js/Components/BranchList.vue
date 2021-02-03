@@ -149,8 +149,7 @@ props: {
 components:{ModalComponent},
 data() {
     return {
-        branches: [],
-        action:false, 
+        branches: [], 
         showDetails:false,
         filter:'',
     };
@@ -161,6 +160,8 @@ watch:{
             this.fetchBranchList();
         }
     }
+},
+computed:{
 },
 mounted() {
     this.fetchBranchList();
@@ -186,6 +187,9 @@ methods: {
     },
     closeModal(){
         this.showDetails = false;
+    },
+    viewDetails(branch){
+        
     }
 },
 };

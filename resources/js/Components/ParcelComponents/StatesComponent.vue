@@ -78,6 +78,8 @@ export default {
             if(data.status == 'success'){
                 this.loadStates();
                 this.category = '';
+                this.state = '';
+                this.slug = '';
                 document.forms['form_state'].reset();
             }else{
                 console.log(data.message);

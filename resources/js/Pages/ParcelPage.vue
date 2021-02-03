@@ -163,16 +163,19 @@ export default {
     },
     beforeMount(){
         document.title = "Manage Parcels";
-        // fetch Categories
-        HttpClient.client.post('parcel/category/fetch')
-        .then((res) => {
-            this.categories = res.data;
-        })
+        this.fetchCategories();
     },
     mounted(){
         this.loadStates();
     },
     methods:{
+        fetchCategories(){
+            // fetch Categories
+            HttpClient.client.post('parcel/category/fetch')
+            .then((res) => {
+                this.categories = res.data;
+            })
+        },
         loadStates(){
             HttpClient.client
             .post("/parcel/fetch_states")
@@ -190,6 +193,7 @@ export default {
         closeModal(){
             this.showCategories = false;
             this.showAddModal = false;
+            this.fetchCategories();
         },
         storeParcel(){
             let data = {
