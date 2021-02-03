@@ -28,8 +28,12 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::get('/tracking', function () {
-    return Inertia\Inertia::render('HomePage');
+    return Inertia\Inertia::render('TrackingPage');
 })->name('tracking');
+
+Route::get('/parceldetails', function () {
+    return Inertia\Inertia::render('ParcelDetailsPage');
+})->name('perceldetails');
 
 // Action Buttons Routes
 Route::get('/request-quote', function () {

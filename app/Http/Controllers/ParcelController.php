@@ -292,4 +292,22 @@ class ParcelController extends Controller
         return $branch;
     }
 
+    public function check_trackid(Request $request){
+        $getParcel = parcel::where('trackingid',$request->trackid)->get();
+        $now = date('U');
+        if(count($getParcel) > 0){
+            $result = [
+                'count' => count($getParcel),
+                'parceldetail' => $getParcel,
+                'now' => $now
+            ];
+        }else{
+            $result = [
+                'count' => count($getParcel)
+            ];
+        }
+
+        return json_encode($result);
+    }
+
 }
