@@ -12,7 +12,7 @@
                     <p class="pTextBold">
                         <strong>
                             Tracking ID: 
-                            <i style="padding:10px 10px 1px; display:inline-block; border-bottom: 2pt solid #ff7900; font-style:normal;">DF9937</i>
+                            <i style="padding:10px 10px 1px; display:inline-block; border-bottom: 2pt solid #ff7900; font-style:normal;">{{ displayParcelDetails.trackingid}}</i>
                         </strong>
                     </p>
                 </div>
@@ -27,13 +27,13 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <td>Estimated Time of Departuer (ETD)</td>
-                                    <td><b>today</b></td>
+                                    <td>Date of Departuer (DD)</td>
+                                    <td><b>{{ displayParcelDetails.created_at}}</b></td>
                                 </tr>
-                                <tr>
+                                <!-- <tr>
                                     <td>Estimated Time of Arrival (ETA)</td>
                                     <td><b>tomorrow</b></td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
@@ -46,12 +46,12 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <td>From</td>
-                                    <td><b>pickup</b></td>
+                                    <td>From:</td>
+                                    <td><b>Branch 1</b></td>
                                 </tr>
                                 <tr>
-                                    <td>To</td>
-                                    <td><strong>dropoff</strong></td>
+                                    <td>To:</td>
+                                    <td><strong>{{ displayParcelDetails.reciever_address}}</strong></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -69,12 +69,12 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <td>Name</td>
-                                    <td><b>Chinmark Foods</b></td>
+                                    <td>Name:</td>
+                                    <td> <b>{{ displayParcelDetails.sender}}</b></td>
                                 </tr>
                                 <tr>
-                                    <td>Origin</td>
-                                    <td><b>send location</b></td>
+                                    <td>Origin:</td>
+                                    <td> <b>Chinmark Logistics</b></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -88,20 +88,20 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <td>Name</td>
-                                    <td><b>Noble Okechi</b></td>
+                                    <td>Name:</td>
+                                    <td> <b>{{ displayParcelDetails.reciever}}</b></td>
                                 </tr>
                                 <tr>
-                                    <td>Email</td>
-                                    <td><b>ok@gmail.com</b></td>
+                                    <td>Email:</td>
+                                    <td> <b>{{ displayParcelDetails.reciever_email}}</b></td>
                                 </tr>
                                 <tr>
-                                    <td>Phone</td>
-                                    <td><strong>090</strong></td>
+                                    <td>Phone:</td>
+                                    <td> <strong>{{ displayParcelDetails.reciever_phone}}</strong></td>
                                 </tr>
                                  <tr>
-                                    <td>Address</td>
-                                    <td><strong>64 Abagana Str</strong></td>
+                                    <td>Address:</td>
+                                    <td> <strong>{{ displayParcelDetails.reciever_address}}</strong></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -123,8 +123,8 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <td>Item Description</td>
-                                    <td><b>description</b></td>
+                                    <td>Item Description:</td>
+                                    <td> <b>{{ displayParcelDetails.description}}</b></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -135,8 +135,8 @@
                         <table class="table table-hover table-striped">
                             <tbody>
                                 <tr>
-                                    <td>Weight and Dimension</td>
-                                    <td><b>dimension</b></td>
+                                    <td>Weight and Dimension:</td>
+                                    <td> <b>{{ displayParcelDetails.weight}}</b></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -145,16 +145,16 @@
             </div>
 
             <!-- Travel Timeline row -->
-            <div class="container max-w-6xl py-2 mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
+            <!-- <div class="container max-w-6xl py-2 mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
                 <div class="">
                     <div class="card-body cardHeadEdit ">
                     <p class="pTextBold">TRAVEL TIMELINE</p>
                     </div>
                 </div>
-            </div>
-            <div class="container max-w-6xl py-2 mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
+            </div> -->
+            <!-- <div class="container max-w-6xl py-2 mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
                 <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-                    <!-- <div class="mt-1"> -->
+                    
                         <table class="min-w-full leading-normal">
                             <thead class="text-black font-bold">
                                 <tr >
@@ -173,23 +173,23 @@
                                 </tr>
                             </tbody>
                         </table>
-                    <!-- </div> -->
+                    
                 </div>
-            </div>
+            </div> -->
 
             <!-- PROGRESS BAR ROW -->
-            <div class="container max-w-6xl py-6 mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols- progressBarRow">
+            <div class="container max-w-6xl py-6 mb-5 mx-auto grid grid-cols-1 md:grid-cols-1 lg:grid-cols- progressBarRow">
                 <div class="">
                     <div class="card-body">
-                        <div class="progress mb-3">
+                        <!-- <div class="progress mb-3">
                             <div class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="alert alert-success" >
-                            <p><b>Receiver Name</b>, your parcel is safely intransit and its currently at</p>
+                            <p><b>{{ displayParcelDetails.reciever}}</b>, your parcel is safely intransit and its currently at {{ displayParcelDetails.current_address}}</p>
                         </div>
                         <div class="alert alert-danger" >
                             <p><b>Message</b></p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
