@@ -84,7 +84,14 @@
                 </inertia-link>
 
                 <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                    href="/Riders-Management" :active="$page.currentRouteName == 'riders'">
+                    href="/Manage-Instant-Pickups" :active="$page.currentRouteName == 'pickups'">
+                    <font-awesome-icon icon="shipping-fast" class="text-xl" />
+
+                    <span class="mx-3">Instant Pickups</span>
+                </inertia-link>
+
+                <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                    href="/Manage-Requested-Quotes" :active="$page.currentRouteName == 'quote_feedback'">
                     <font-awesome-icon :icon="['far','file-alt']" class="text-xl" />
 
                     <span class="mx-3">Requested Quotes</span>
@@ -104,12 +111,12 @@
                     <span class="mx-3">Manage Profile</span>
                 </inertia-link> -->
                 
-                <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                <!-- <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
                     href="/Customer-Management" :active="$page.currentRouteName == 'customers'">
                     <font-awesome-icon icon="users" class="text-xl" />
 
                     <span class="mx-3">Manage Customers</span>
-                </inertia-link>
+                </inertia-link> -->
 
                 <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
                     href="/Manage-Feedbacks" :active="$page.currentRouteName == 'feedbacks'">

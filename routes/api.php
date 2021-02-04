@@ -48,12 +48,23 @@ Route::group(['prefix' => 'parcel'], function () {
     Route::post('request_pickup', [ParcelController::class, 'request_pickup']);
     Route::post('asign_rider', [ParcelController::class, 'asign_rider']);
 
+    // Request Quotes 
+    Route::post('request_quote', [ParcelController::class, 'request_quote']);
+    Route::post('fetch_quote_request', [ParcelController::class, 'fetch_quote_request']);
+
+
     // Branch Offices/State Management
     Route::post('store_state', [ParcelController::class, 'store_state']);
     Route::post('fetch_states', [ParcelController::class, 'fetch_states']);
     Route::delete('delete_state', [ParcelController::class, 'delete_state']);
     Route::post('store_branch', [ParcelController::class, 'store_branch']);
     Route::post('fetch_branch', [ParcelController::class, 'fetch_branch']);
+
+    // Pickup Reuest/Management
+    Route::group(['prefix' => 'pickup'], function () {
+        Route::post('/list', [ParcelController::class, 'pick_list']);
+        Route::post('asign_rider', [ParcelController::class, 'asign_pickup_rider']);
+    });
 
     // Parcel Categories Management Routes in the Parcel Route Group
     Route::group(['prefix' => 'category'], function () {

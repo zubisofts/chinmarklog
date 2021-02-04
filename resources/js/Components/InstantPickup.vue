@@ -51,10 +51,16 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="form-group grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <input v-model="pickup" type="text" name="pickup" id="pickup" :class="form_input" placeholder="Pickup Address/Location" required>
-                                    <input v-model="rlocation" type="text" name="rpickup" id="rpickup" :class="form_input" placeholder="Reciever's Address/Location" required>
+                                    <input v-model="pickup" type="text" name="pickup" id="pickup" :class="form_input" placeholder="Pickup Address" required>
+                                    <input v-model="rlocation" type="text" name="rpickup" id="rpickup" :class="form_input" placeholder="Reciever's Address" required>
                                 </div>
                             </div>
+                            <!-- <div class="row mb-3">
+                                <div class="form-group grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <input v-model="slandmark" type="text" name="slandmark" id="slandmark" :class="form_input" placeholder="Pickup Location/Landmark" ref="origin" required>
+                                    <input v-model="rlandmark" type="text" name="rlandmark" id="rlandmark" :class="form_input" placeholder="Reciever's Location/Landmark" required>
+                                </div>
+                            </div> -->
                             <div class="row mb-3">
                                 <div class="form-group grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <select v-model="category" name="category" id="category" :class="form_input" required>
@@ -80,7 +86,7 @@
                                                 <font-awesome-icon icon="circle-notch" pulse v-else />
                                             </span>
                                             <button type="submit" class="btn bg-gray-900 text-gray-100 col-span-5 py-2 px-2 rounded-r">
-                                                Send Message
+                                                Request Pickup
                                             </button>
                                         </div>
                                     </div>
@@ -145,6 +151,8 @@ export default {
             rlocation:'',
             message:'',
             weight:'',
+            slandmark:'',
+            rlandmark:'',
             showModal:false,
             modal_msg: '',
             modal_type:'',
@@ -165,6 +173,9 @@ export default {
         .then((res) => {
             this.categories = res.data;
         })
+    },
+    mounted() {
+        this.fireAutocomplete();
     },
     methods:{
         requestPickup(){
@@ -227,6 +238,15 @@ export default {
         },
         closeModal(){
             this.showModal = false;
+        },
+        fireAutocomplete(){
+            // for (let ref in this.$refs) {
+            //     const autocomplete = new google.maps.places.Autocomplete(this.$refs[ref]);
+            //     autocomplete.addListener('place_changed', function () {
+            //         const place = autocomplete.getPlace();
+            //         console.log(place);
+            //     });
+            // }
         }
     }
 }

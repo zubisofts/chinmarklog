@@ -8,7 +8,9 @@ use App\Models\branch;
 use App\Models\parcel;
 use Illuminate\Http\Request;
 use App\Models\parcel_pickup;
+use App\Models\quote_request;
 use App\Models\assigned_parcel;
+use App\Models\assigned_pickup;
 use App\Models\parcel_category;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\NotificationController;
@@ -290,6 +292,85 @@ class ParcelController extends Controller
             $value->state = $value->state;
         }
         return $branch;
+    }
+
+    // Pickup Request / Management //
+    public function pick_list(Request $request)
+    {
+        $pickups = parcel_pickup::orderBy('created_at', 'DESC')->get();
+        foreach ($pickups as $pickup) {
+            $pickup->category = $pickup->category;
+        }
+        return $pickups;
+    }
+
+    public function asign_pickup_rider(Request $request)
+    {
+        if(!assigned_pickup::where('rider_id', $request->riderid)->where('parcel_id', $request->parcelid)->exists()){
+            $assign = new assigned_pickup;
+            $assign->parcel_id = $request->parcelid;
+            $assign->rider_id = $request->riderid;
+            $assign->description = 'You have been requested to pickup a parcel with Parcel ID ' . $request->parcelid . ' assigned to rider with ID ' . $request->riderid;
+            if($assign->save()){
+                $parcel = parcel_pickup::where('id', $assign->parcel_id)->first();
+                $parcel->status = 'assigned';
+                $parcel->update();
+                return response()->json([
+                    'status' => 'success'
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'An unexpected error occured!'
+                ], 200);
+            }
+        }else{
+            $parcel = parcel_pickup::where('id', $request->parcelid)->first();
+            $parcel->status = 'assigned';
+            $parcel->update();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Detected existing assignment for the parcel'
+            ], 200);
+        }
+    }
+
+    public function request_quote(Request $request)
+    {
+        $quote_request = new quote_request;
+        $quote_request->name = $request->fname;
+        $quote_request->phone = $request->phone;
+        $quote_request->email = $request->email;
+        $quote_request->company = $request->company;
+        $quote_request->description = $request->desc;
+        $quote_request->category_id = $request->category_id;
+        $quote_request->weight = $request->weight;
+        $quote_request->departure_address = $request->departure_addr;
+        $quote_request->destination = $request->delivery_addr;
+        if($quote_request->save()){
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Your quote request was well recieved! We will get back to you soon!'
+            ]);
+        }else{
+            return json_encode([
+                'status' => 'error',
+                'message' => 'An unexpected error occured! Please try again!'
+            ]);
+        }
+    }
+
+    public function fetch_quote_request(Request $request)
+    {
+        if($request->filter == 'all'){
+            $quote_request = quote_request::orderBy('created_at', 'DESC')->get();
+        }else{
+            $quote_request = quote_request::where('status', $request->filter)->orderBy('created_at', 'DESC')->get();
+        }
+        foreach ($quote_request as $quote) {
+            $quote->category = $quote->category;
+        }
+        return $quote_request;
     }
 
 }

@@ -7,6 +7,7 @@
                     <button class="float-right mt-4 mr-6 font-light" @click="closeModal" >
                         <font-awesome-icon icon="times" class="font-light" style="font-size:1.3rem; font-weight:normal;" />
                     </button>
+                    <slot name="title"></slot>
                 </div>
                 <div class="modal-body py-3 px-4 overflow-y-auto transform transition-all"> 
                     <slot></slot>

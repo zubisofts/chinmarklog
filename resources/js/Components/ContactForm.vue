@@ -150,6 +150,7 @@ export default {
             this.sending = false;
             this.modal_type = 'success';
             this.modal_msg = response_data.message;
+            this.resetForm()
             this.showModal = true;
         },
         handleError(response_data){
