@@ -28,7 +28,7 @@
                             <tbody>
                                 <tr>
                                     <td>Date of Departuer (DD)</td>
-                                    <td><b>{{ displayParcelDetails.created_at}}</b></td>
+                                    <td><b>{{ formatDate(displayParcelDetails.created_at) }}</b></td>
                                 </tr>
                                 <!-- <tr>
                                     <td>Estimated Time of Arrival (ETA)</td>
@@ -274,6 +274,11 @@ export default {
             }else{
                 alert('Invalid Tracking Number')
             }
+        },
+        formatDate(date){
+            let d_date = new Date(date);
+            let testDate = d_date.toDateString();
+            return testDate;
         },
         displayParcelTimeLine(response){
             if(response.count > 0){
