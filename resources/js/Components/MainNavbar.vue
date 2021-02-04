@@ -16,9 +16,9 @@
                     <jet-nav-link :href="route('faq')" :active="$page.currentRouteName == 'faq'">
                         <font-awesome-icon :icon="['far','question-circle']"  class="mr-1" /> FAQ
                     </jet-nav-link>
-                    <jet-nav-link :href="route('reviews')" :active="$page.currentRouteName == 'reviews'">
+                    <!-- <jet-nav-link :href="route('reviews')" :active="$page.currentRouteName == 'reviews'">
                         <font-awesome-icon :icon="['fab','rev']"  class="mr-1" /> Reviews
-                    </jet-nav-link>
+                    </jet-nav-link> -->
                     <jet-nav-link :href="route('contact')" :active="$page.currentRouteName == 'contact'">
                         <font-awesome-icon icon="map-marker"  class="mr-1" /> Contact
                     </jet-nav-link>
@@ -47,9 +47,9 @@
                         <font-awesome-icon :icon="['far','question-circle']"  class="mr-1" /> FAQ
                     </jet-responsive-nav-link>
                     
-                    <jet-responsive-nav-link :href="route('reviews')" :active="$page.currentRouteName == 'reviews'">
+                    <!-- <jet-responsive-nav-link :href="route('reviews')" :active="$page.currentRouteName == 'reviews'">
                         <font-awesome-icon :icon="['fab','rev']"  class="mr-1" /> Reviews
-                    </jet-responsive-nav-link>
+                    </jet-responsive-nav-link> -->
                     
                     <jet-responsive-nav-link :href="route('contact')" :active="$page.currentRouteName == 'contact'">
                         <font-awesome-icon icon="map-marker"  class="mr-1" /> Contact

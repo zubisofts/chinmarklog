@@ -47,6 +47,7 @@ Route::group(['prefix' => 'parcel'], function () {
     Route::post('fetch', [ParcelController::class, 'fetch']);
     Route::post('request_pickup', [ParcelController::class, 'request_pickup']);
     Route::post('asign_rider', [ParcelController::class, 'asign_rider']);
+    Route::post('check_trackid', [ParcelController::class, 'check_trackid']);
 
     // Request Quotes 
     Route::post('request_quote', [ParcelController::class, 'request_quote']);
