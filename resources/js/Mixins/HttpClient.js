@@ -2,9 +2,7 @@ import axios from 'axios';
 
 class HttpClient{
     constructor() {
-        // const   domain = process.env.MIX_API_DOMAIN, 
-                // protocol = process.env.MIX_API_PROTOCOL,
-        const   domain = 'chinmarklog.com/api', 
+        const   domain = '192.168.43.71/api', 
                 protocol = 'http',
                 appUri = `${protocol}://${domain}`;
 

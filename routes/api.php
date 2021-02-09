@@ -99,4 +99,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/decline', [HomeController::class, 'decline_parcel']);
     Route::post('/confirm', [HomeController::class, 'confirm_parcel']);
     Route::post('/update_parcel_status', [HomeController::class, 'update_parcel_status']);
+    Route::post('/update_profile', [HomeController::class, 'update_profile']);
 });
