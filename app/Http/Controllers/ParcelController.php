@@ -59,6 +59,7 @@ class ParcelController extends Controller
         $parcel->reciever_address = $request->raddress;
         $parcel->destination_state_id = $request->sstate;
         $parcel->weight = $request->weight;
+        $parcel->category_id = $request->category;
         $parcel->description = $request->desc;
         $parcel->current_address = $request->paddress;
         if($parcel->save()){
