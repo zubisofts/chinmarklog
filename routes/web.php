@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/services-worker', function () {
+    return asset('/service-worker.js');
+});
+
 Route::get('/', function () {
     return Inertia\Inertia::render('HomePage');
 })->name('home');

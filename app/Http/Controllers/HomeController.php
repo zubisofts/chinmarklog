@@ -177,4 +177,60 @@ class HomeController extends Controller
         }
     }
 
+    public function update_parcel_status(Request $request)
+    {
+        $parcelid = $request->parcel_id;
+        if($request->actiion == 'stop_parcel'){
+            $parcel = parcel::where('id', $request->parcelid)->first();
+            $parcel->status = 'stopped';
+            $parcel->update();
+        }elseif ($request->action == 'start_parcel') {
+            $parcel = parcel::where('id', $request->parcelid)->first();
+            $parcel->status = 'transit';
+            $parcel->update();
+        }elseif ($request->action == 'delivered') {
+            if($request->hasFile('signature')){ //If request have image
+                //get Image
+                $image = $request->file('signature');
+                //Get the Original File Name and path
+                $thumbnail = $request->file('signature')->getClientOriginalName();
+                //Get the filename only using native php 'pathinfo'
+                $filename = pathinfo($thumbnail, PATHINFO_FILENAME);
+                //Extract the Extension
+                $ext = strtolower($request->file('signature')->getClientOriginalExtension());
+                //prepare the file to be stored
+                $nameToStore = $filename . '_'. time() .'.'. $ext;
+                //upload the file
+                $image_resize = Image::make($image->getRealPath());
+                // To resize the image to a width of 600 and constrain aspect ratio (auto height)
+                $image_resize->resize(600,  null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    });
+                $image_resize->orientate();
+                if($image_resize->save(storage_path('app/public/images/signatures/'.$nameToStore))){
+                    $parcel = parcel::where('id', $request->parcelid)->first();
+                    $parcel->status = 'delivered';
+                    $parcel->update();
+                    return response(json_encode([
+                        'status' =>'success',
+                        'message' =>"Parcel delivered and updated successfully.",
+                        'result' => []
+                    ]), 200);
+                }else{
+                    return response(json_encode([
+                        'status' =>'error',
+                        'message' =>"An unexpected error occured while trying to save signature image file.",
+                        'result' => []
+                    ]), 200);
+                }
+            }else{
+                return response(json_encode([
+                    'status' =>'error',
+                    'message' =>"Customer's signature could not be confirmed for delivery.",
+                    'result' => []
+                ]), 200);
+            }
+        }
+    }
+
 }

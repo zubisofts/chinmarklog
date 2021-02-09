@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\rider;
 use App\Models\state;
 use App\Models\branch;
@@ -12,6 +13,7 @@ use App\Models\quote_request;
 use App\Models\assigned_parcel;
 use App\Models\assigned_pickup;
 use App\Models\parcel_category;
+use App\Event\UpdateParcelStatus;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\NotificationController;
 
@@ -92,6 +94,7 @@ class ParcelController extends Controller
                 $parcel = parcel::where('id', $assign->parcel_id)->first();
                 $parcel->status = 'assigned';
                 $parcel->update();
+                $this->sendNotification($parcel, $request->riderid, 'assigned', 'You have been assigned a parcel');
                 return response()->json([
                     'status' => 'success'
                 ], 200);
@@ -391,5 +394,12 @@ class ParcelController extends Controller
         return $quote_request;
     }
 
-
+    public function sendNotification($parcel, $riderid, $status = 'assigned', $message = null)
+    {
+        // fetch rider
+        $rider = rider::where('id', $riderid)->first();
+        // fetch rider as user
+        $user = User::where('email', $rider->email)->first();
+        broadcast(new UpdateParcelStatus($parcel, $user, ['status'=>$status, 'message'=>$message]))->toOthers();
+    }
 }
