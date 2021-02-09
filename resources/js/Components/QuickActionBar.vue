@@ -6,8 +6,10 @@
                 <div>
                     <inertia-link href="#" class="text-sm mr-2">
                         <strong>
-                            <font-awesome-icon :icon="['fas','shipping-fast']" />
-                            <span class="hidden md:inline">Instant</span> Pickup
+                            <inertia-link href="/pickup_request">
+                                <font-awesome-icon :icon="['fas','shipping-fast']" />
+                                <span class="hidden md:inline">Instant</span> Pickup
+                            </inertia-link>
                         </strong>
                     </inertia-link>
                     <inertia-link href="#" class="text-sm mr-2">
@@ -24,10 +26,15 @@
                     </inertia-link>
                 </div>
                 <div class="text-right">
-                    <font-awesome-icon :icon="['fab','facebook-square']"  class="mr-1" />
-                    <font-awesome-icon :icon="['fab','whatsapp']"  class="mr-1" />
-                    <font-awesome-icon :icon="['fab','twitter']"  class="mr-1" />
-                    <font-awesome-icon :icon="['fab','instagram']"  class="mr-1" />
+                    <a href="https://www.facebook.com/Chinmarkgroup/">
+                        <font-awesome-icon :icon="['fab','facebook-square']"  class="mr-1" />
+                    </a>
+                    <a href="https://twitter.com/ChinmarkG?s=09">
+                        <font-awesome-icon :icon="['fab','twitter']"  class="mr-1" />
+                    </a>
+                    <a href="https://instagram.com/chinmarkgroup?igshid=kdwpxdx55r4z">
+                        <font-awesome-icon :icon="['fab','instagram']"  class="mr-1" />
+                    </a>
                 </div>
             </div>
         </div>

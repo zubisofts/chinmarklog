@@ -106,7 +106,14 @@
                         class="px-5 py-5 border-b border-gray-200 bg-white text-sm" :class="parcel.status"
                     >
                         <p class="text-gray-900 whitespace-no-wrap">
-                            {{ parcel.status }}
+                            <font-awesome-icon :icon="['fas', 'gift']" style="font-size:1.2rem;" class="text-blue-700" v-if="parcel.status == 'assigned'" />
+                            <font-awesome-icon :icon="['fas', 'shipping-fast']" style="font-size:1.2rem;" class="text-green-600" v-if="parcel.status == 'transit'" />
+                            <font-awesome-icon :icon="['far', 'stop-circle']" style="font-size:1.2rem;" class="text-red-600" v-if="parcel.status == 'stopped'" />
+                            <font-awesome-icon :icon="['fas', 'check-circle']" style="font-size:1.2rem;" class="text-green-600" v-if="parcel.status == 'delivered'" />
+                            <span class="text-blue-700" v-if="parcel.status == 'assigned'">{{ parcel.status }}</span>
+                            <span class="text-green-600" v-if="parcel.status == 'transit'" >{{ parcel.status }}</span>
+                            <span class="text-red-600" v-if="parcel.status == 'stopped'">{{ parcel.status }}</span>
+                            <span class="text-green-600" v-if="parcel.status == 'delivered'">{{ parcel.status }}</span>
                         </p>
                     </td>
                     </tr>
@@ -146,7 +153,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="mb-4">
                             <!-- <label :class="labelStyles" for="sender"> Filter Riders<sup class="text-red-500">*</sup> </label> -->
-                            <select :class="inputStyles" v-model="sstate">
+                            <select :class="inputStyles" v-model="sstate" @change="fetchRidersList()">
                                 <option value="0"> All Riders </option>
                                 <option v-for="state in states" :key="state.id" :value="state.id"> {{ 'Riders in ' + state.name }} </option>
                             </select>
@@ -264,7 +271,7 @@ methods: {
         },
         fetchRidersList() {
             HttpClient.client
-                .post('/riders/fetch', {filter: this.sstate, filter_by:'id'})
+                .post('/riders/fetch', {filter: this.sstate, filter_by:'state_id'})
                 .then((response) => {
                     this.riders = response.data;
                 })
@@ -276,6 +283,9 @@ methods: {
                 }
                 // console.log(error);
             });
+        },
+        filterRiders(){
+
         },
         assignRider(parcelid){
             let data = {
@@ -313,15 +323,12 @@ methods: {
         font-weight: bold;
     }
     td.unassigned p{
-        color:black;
         font-weight: bold;
     }
     td.assigned p{
-        color: blue;
         font-weight: bold;
     }
     td.transit p{
-        color: green;
         font-weight: bold;
     }
 </style>

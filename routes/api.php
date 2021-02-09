@@ -47,6 +47,12 @@ Route::group(['prefix' => 'parcel'], function () {
     Route::post('fetch', [ParcelController::class, 'fetch']);
     Route::post('request_pickup', [ParcelController::class, 'request_pickup']);
     Route::post('asign_rider', [ParcelController::class, 'asign_rider']);
+    Route::post('check_trackid', [ParcelController::class, 'check_trackid']);
+
+    // Request Quotes 
+    Route::post('request_quote', [ParcelController::class, 'request_quote']);
+    Route::post('fetch_quote_request', [ParcelController::class, 'fetch_quote_request']);
+
 
     // Branch Offices/State Management
     Route::post('store_state', [ParcelController::class, 'store_state']);
@@ -54,6 +60,12 @@ Route::group(['prefix' => 'parcel'], function () {
     Route::delete('delete_state', [ParcelController::class, 'delete_state']);
     Route::post('store_branch', [ParcelController::class, 'store_branch']);
     Route::post('fetch_branch', [ParcelController::class, 'fetch_branch']);
+
+    // Pickup Reuest/Management
+    Route::group(['prefix' => 'pickup'], function () {
+        Route::post('/list', [ParcelController::class, 'pick_list']);
+        Route::post('asign_rider', [ParcelController::class, 'asign_pickup_rider']);
+    });
 
     // Parcel Categories Management Routes in the Parcel Route Group
     Route::group(['prefix' => 'category'], function () {
@@ -86,4 +98,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/parcel_list', [HomeController::class, 'parcel_list']);
     Route::post('/decline', [HomeController::class, 'decline_parcel']);
     Route::post('/confirm', [HomeController::class, 'confirm_parcel']);
+    Route::post('/update_parcel_status', [HomeController::class, 'update_parcel_status']);
 });

@@ -91,10 +91,19 @@ class RiderController extends Controller
         if($request->filter == '' || $request->filter == '0' || $request->filter == 'all'){
             $riders = rider::orderBy('firstname', 'ASC')->get();
         }else{
-            $riders = rider::where('firstname', 'like', '%' . $request->filter . '%')
-            ->orWhere('lastname', 'like', '%' . $request->filter . '%')
-            ->orWhere('plate_number', 'like', '%' . $request->filter . '%')
-            ->orderBy('firstname', 'ASC')->get();
+            if($request->has('filter_by') && $request->filter_by == 'state_id'){
+                $riders = rider::orderBy('firstname', 'ASC')->get();
+                foreach ($riders as $key => $rider) {
+                    if($rider->branch->state->id != $request->filter){
+                        unset($riders[$key]);
+                    }
+                }
+            }else{
+                $riders = rider::where('firstname', 'like', '%' . $request->filter . '%')
+                    ->orWhere('lastname', 'like', '%' . $request->filter . '%')
+                    ->orWhere('plate_number', 'like', '%' . $request->filter . '%')
+                    ->orderBy('firstname', 'ASC')->get();
+            }
         }
         
         foreach ($riders as $rider) {

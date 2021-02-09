@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class rider extends Model
 {
     use HasFactory;
+    use Notifiable;
 
     public function branch()
     {
@@ -18,4 +20,5 @@ class rider extends Model
     {
         return $this->belongsTo('App\Model\User', 'id');
     }
+
 }

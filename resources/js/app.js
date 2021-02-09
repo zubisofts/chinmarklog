@@ -31,6 +31,33 @@ Vue.config.productionTip = false
 import CKEditor from '@ckeditor/ckeditor5-vue';
 Vue.use( CKEditor ); 
 
+// Pusher
+// Channel
+import Echo from 'laravel-echo';
+import Pusher from "pusher-js";
+
+window.pusher = new Pusher(process.env.MIX_PUSHER_APP_KEY, {
+    cluster: 'eu'
+  });
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    forceTLS: true
+});
+
+// Beam
+import * as PusherPushNotifications from "@pusher/push-notifications-web";
+const beamsClient = new PusherPushNotifications.Client({
+    instanceId: 'e3767c79-1d0a-496a-818c-02ae3788a180',
+});
+
+beamsClient.start()
+    .then(() => beamsClient.addDeviceInterest('hello'))
+    .then(() => console.log('Successfully registered and subscribed!'))
+    .catch(console.error);
+
 
 Vue.mixin({ methods: { route } });
 Vue.use(InertiaApp);

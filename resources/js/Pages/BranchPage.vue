@@ -141,6 +141,7 @@ export default {
         closeModal(){
             this.showCategories = false;
             this.showAddModal = false;
+            this.loadStates()
         },
         addBranch(){
             let data = {
@@ -173,6 +174,10 @@ export default {
             this.sstate = '';
             this.$refs.addform.reset();
             this.showAddModal = false;
+            this.refresh_state = true;
+            setTimeout(() => {
+                this.refresh_state = false;
+            }, 500);
         }
     }
     

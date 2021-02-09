@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/services-worker', function () {
+    return asset('/service-worker.js');
+});
+
 Route::get('/', function () {
     return Inertia\Inertia::render('HomePage');
 })->name('home');
@@ -28,8 +32,12 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::get('/tracking', function () {
-    return Inertia\Inertia::render('HomePage');
+    return Inertia\Inertia::render('TrackingPage');
 })->name('tracking');
+
+Route::get('/parceldetails', function () {
+    return Inertia\Inertia::render('ParcelDetailsPage');
+})->name('perceldetails');
 
 // Action Buttons Routes
 Route::get('/request-quote', function () {
@@ -55,7 +63,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     Route::get('/Manage-Feedbacks', function () {
         return Inertia\Inertia::render('FeedbackPage');
-    })->name('feedback');
+    })->name('feedbacks');
     
     Route::get('/Manage-Offices', function () {
         return Inertia\Inertia::render('BranchPage');
@@ -64,6 +72,14 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/Parcels', function () {
         return Inertia\Inertia::render('RiderParcelPage');
     })->name('rider_parcel');
+    
+    Route::get('/Manage-Instant-Pickups', function () {
+        return Inertia\Inertia::render('PickupRequestPage');
+    })->name('pickups');
+    
+    Route::get('/Manage-Requested-Quotes', function () {
+        return Inertia\Inertia::render('QuoteFeedbackPage');
+    })->name('quote_feedback');
     
     Route::get('/Tester', ['App\Http\Controllers\NotificationController', 'fetch']);
     
