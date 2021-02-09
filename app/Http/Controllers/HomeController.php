@@ -180,7 +180,7 @@ class HomeController extends Controller
     public function update_parcel_status(Request $request)
     {
         $parcelid = $request->parcel_id;
-        if($request->actiion == 'stop_parcel'){
+        if($request->action == 'stop_parcel'){
             $parcel = parcel::where('id', $request->parcelid)->first();
             $parcel->status = 'stopped';
             $parcel->update();
@@ -231,6 +231,21 @@ class HomeController extends Controller
                 ]), 200);
             }
         }
+    }
+
+    public function update_profile(Request $request)
+    {
+        if($request->has('password')){
+            // Hash::
+            $request->user()->password = Hash::make($request->password);
+        }
+
+        $request->user()->update();
+        return response(json_encode([
+            'status' =>'success',
+            'message' =>"Profile Updated successfully.",
+            'result' => []
+        ]), 200);
     }
 
 }
