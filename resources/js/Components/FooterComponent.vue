@@ -73,36 +73,30 @@
                     <li class="mb-3">
                         <inertia-link href="" class="hover:text-red-300 my-2">
                             <font-awesome-icon :icon="['fab','markdown']" class="mr-1"></font-awesome-icon>
-                            108 Marshall Avenue, Enugu State, Nigeria
+                            #37, Adeniran Ogunsanya Street, Surulere Lagos, Nigeria.
                         </inertia-link>
                     </li>
                     <li class="mb-3">
                         <inertia-link href="tel:+2348000000000" class="hover:text-red-300 my-2">
                             <font-awesome-icon icon="phone-alt" class="mr-1"></font-awesome-icon>
-                            080 0000 0000
+                            09131033248, 09131033247
                         </inertia-link>
                     </li>
                     <li class="mb-3">
                         <inertia-link href="" class="hover:text-red-300 my-2">
                             <font-awesome-icon icon="envelope" class="mr-1"></font-awesome-icon>
-                            support@Chimarklog.com
+                            support@Chimarklogistics.com
                         </inertia-link>
                     </li>
                     <li class="mt-2 pt-2">
-                        <a href="" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
+                        <a href="https://www.facebook.com/Chinmarkgroup/" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
                             <font-awesome-icon :icon="['fab', 'facebook-square']" class="mt-2" />
                         </a>
-                        <a href="" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
-                            <font-awesome-icon :icon="['fab', 'whatsapp']" class="mt-2" />
-                        </a>
-                        <a href="" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
+                        <a href="https://instagram.com/chinmarkgroup?igshid=kdwpxdx55r4z" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
                             <font-awesome-icon :icon="['fab', 'instagram']" class="mt-2" />
                         </a>
-                        <a href="" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
+                        <a href="https://twitter.com/ChinmarkG?s=09" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
                             <font-awesome-icon :icon="['fab', 'twitter']" class="mt-2" />
-                        </a>
-                        <a href="" target="blank" class="h-8 w-8 text-center inline-block rounded-full bg-red-600 mx-1">
-                            <font-awesome-icon :icon="['fab', 'youtube']" class="mt-2" />
                         </a>
                     </li>
                 </ul>
@@ -110,7 +104,7 @@
         </div>
         <hr class="border-gray-800 mt-6">
         <div class="text-center text-gray-100 p-4">
-            Copyright &copy; Chinmark Group of Company Ltd. {{ year.getFullYear() }}
+            Copyright &copy; Chinmark Group of Company Ltd. {{ year.getFullYear() }} <br> Developed By: D'Rubix Group
         </div>
     </div>
 </template>

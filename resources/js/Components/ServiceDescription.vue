@@ -73,7 +73,7 @@
                         <font-awesome-icon icon="shipping-fast" size="2x" class="mt-3" />
                     </div>
                     <div class="col-span-5">
-                        <h2 class="mb-3 font-bold text-red-600 text-2xl">Pickups/Fast Delivery</h2>
+                        <h2 class="mb-3 font-bold text-red-600 text-2xl">Pickups</h2>
                         <p>
                             Our dynamic and swift response parcel managers are always ready do pickup 
                             from your location to your preffered location in less significant time.
@@ -100,13 +100,14 @@
             <div class="py-1 mx-4 md:mx-0">
                 <div class="bg-white border rounded shadow-lg p-4 grid grid-cols-6 gap-4">
                     <div class="text-right font-bold text-red-600">
-                        <font-awesome-icon icon="warehouse" size="2x" class="mt-3" />
+                        <font-awesome-icon :icon="['far','file-alt']" size="2x" class="mt-3" />
                     </div>
                     <div class="col-span-5">
-                        <h2 class="mb-3 font-bold text-red-600 text-2xl">Warehousing</h2>
+                        <h2 class="mb-3 font-bold text-red-600 text-2xl">Request Quote</h2>
                         <p>
-                            Chinmark Logistics warehouses are located at different geo-graphical 
-                            locations within the country and abroad for keeping your parcel save.
+                            In Chinmark Logistics, we left a space for our users to place their 
+                            quote request and get a response from us based on their quote request.
+                            
                         </p>
                     </div>
                 </div>
@@ -118,10 +119,10 @@
                         <font-awesome-icon icon="truck-moving" size="2x" class="mt-3" />
                     </div>
                     <div class="col-span-5">
-                        <h2 class="mb-3 font-bold text-red-600 text-2xl">Trucks/Cargo Logistics</h2>
+                        <h2 class="mb-3 font-bold text-red-600 text-2xl">Fast Delivery</h2>
                         <p>
-                            We handle Heavy Duty Logistics within and outside the country based on our heavy duty 
-                            equipments, trucks and ship.
+                            Our riders realiable and deliver speedily without stories. Buy it, we deliver 24/7, 
+                            No stress, No stories.
                         </p>
                     </div>
                 </div>
@@ -134,7 +135,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </template>

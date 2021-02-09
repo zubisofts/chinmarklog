@@ -25,7 +25,7 @@ class CreateQuoteRequestsTable extends Migration
             $table->string('departure_address')->nullable();
             $table->string('destination')->nullable();
             $table->mediumText('description')->nullable();
-            $table->enum('status', ['unseen', 'seen', 'replied'])->nullable()->default('unseen');
+            $table->enum('status', ['unseen', 'seen', 'assigned', 'replied'])->nullable()->default('unseen');
             $table->timestamps();
         });
     }
