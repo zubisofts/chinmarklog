@@ -2,7 +2,7 @@
 <div class="max-w-7xl mx-auto sm:px-6">
     <div class="container mx-auto sm:px-8">
     <div class="py-3">
-        
+
         <div class="my-2 flex sm:flex-row flex-col px-2">
             <div class="flex flex-row mb-1 sm:mb-0 z-0">
                 <div class="relative">
@@ -106,10 +106,12 @@
                         class="px-5 py-5 border-b border-gray-200 bg-white text-sm" :class="parcel.status"
                     >
                         <p class="text-gray-900 whitespace-no-wrap">
+                            <font-awesome-icon :icon="['fas', 'gift']" style="font-size:1.2rem;" class="text-gray-700" v-if="parcel.status == 'unassigned'" />
                             <font-awesome-icon :icon="['fas', 'gift']" style="font-size:1.2rem;" class="text-blue-700" v-if="parcel.status == 'assigned'" />
                             <font-awesome-icon :icon="['fas', 'shipping-fast']" style="font-size:1.2rem;" class="text-green-600" v-if="parcel.status == 'transit'" />
                             <font-awesome-icon :icon="['far', 'stop-circle']" style="font-size:1.2rem;" class="text-red-600" v-if="parcel.status == 'stopped'" />
                             <font-awesome-icon :icon="['fas', 'check-circle']" style="font-size:1.2rem;" class="text-green-600" v-if="parcel.status == 'delivered'" />
+                            <span class="text-gray-700" v-if="parcel.status == 'unassigned'">{{ parcel.status }}</span>
                             <span class="text-blue-700" v-if="parcel.status == 'assigned'">{{ parcel.status }}</span>
                             <span class="text-green-600" v-if="parcel.status == 'transit'" >{{ parcel.status }}</span>
                             <span class="text-red-600" v-if="parcel.status == 'stopped'">{{ parcel.status }}</span>
@@ -134,12 +136,54 @@
     </div>
     <!-- Modal -->
     <modal-component :prop-show="showDetails" @closeModal="closeModal()">
-        <div>
-            <div class="">
+        <template #title>
+             <div class="bg-red-500 text-white px-4 pt-2 pb-1 rounded-t">
                 <div class="mb-4">
                     <h2 class="text-lg font-bold">
                         Parcel Details
                     </h2>
+                </div>
+            </div>
+        </template>
+        <div>
+            <div class="">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Tracking ID</label>
+                        <span class="block font-semibold">{{ sel_parcel.trackingid }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Parcel Category</label>
+                        <span class="block font-semibold" v-if="sel_parcel.category">{{ sel_parcel.category.category }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Reciever</label>
+                        <span class="block font-semibold">{{ sel_parcel.reciever }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Reveiver's Phone</label>
+                        <span class="block font-semibold">{{ sel_parcel.reciever_phone }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Reveiver's Email</label>
+                        <span class="block font-semibold">{{ sel_parcel.reciever_email }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Sender</label>
+                        <span class="block font-semibold">{{ sel_parcel.sender }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Sender's Phone</label>
+                        <span class="block font-semibold">{{ sel_parcel.sender_phone }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Sender's Email</label>
+                        <span class="block font-semibold">{{ sel_parcel.sender_email }}</span>
+                    </div>
+                    <div class="mb-3 col-span-2">
+                        <label class="text-sm text-red-600">Additional Info.</label>
+                        <span class="block font-semibold">{{ sel_parcel.description }}</span>
+                    </div>
                 </div>
             </div>
             <hr>
@@ -206,7 +250,8 @@ data() {
         srider:'',
         sstate:'0',
         states:[],
-        riders:[]
+        riders:[],
+        errors:[]
     };
 },
 watch:{
@@ -223,6 +268,7 @@ mounted() {
 },
 methods: {
     fetchParcelList() {
+    this.errors = [];
     // Url to fetch the list of rented vehicles
     var url = "/parcel/fetch";
     // send a post http request to fetch list of rental vehicles
@@ -232,12 +278,15 @@ methods: {
             this.handleParcelList(response.data);
         })
         .catch((error) => {
-        if (error.response) {
-            console.log(error.response.data.message);
-        } else {
-            console.log("An error occoured probably due to network!");
-        }
-        console.log(error);
+            if(error.response){
+                this.errors.push({message:error.response.message.data});
+                console.log(error.response.message.data);
+            }else{
+                this.errors.push({message:`An error occured and might be due to Network!
+                                                Please check your network connection.`});
+                console.log('An error occured due to Network!');
+            }
+            console.log(error);
         });
     },
     loadStates(){
@@ -248,9 +297,12 @@ methods: {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                    Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -276,11 +328,14 @@ methods: {
                     this.riders = response.data;
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
-                }
+                    if(error.response){
+                        this.errors.push({message:error.response.message.data});
+                        console.log(error.response.message.data);
+                    }else{
+                        this.errors.push({message:`An error occured and might be due to Network!
+                                                        Please check your network connection.`});
+                        console.log('An error occured due to Network!');
+                    }
                 // console.log(error);
             });
         },
@@ -311,7 +366,7 @@ methods: {
                 this.fetchParcelList();
                 this.closeModal();
             }else{
-                console.log(res);
+                this.errors.push({message:res.message});
             }
         }
 },

@@ -13,4 +13,9 @@ class parcel extends Model
     {
         return $this->hasOne('App\Models\assigned_parcel', 'id');
     }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Models\parcel_category', 'category_id');
+    }
 }

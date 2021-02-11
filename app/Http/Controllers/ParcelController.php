@@ -79,8 +79,11 @@ class ParcelController extends Controller
 
     public function fetch(Request $request)
     {
-        $parcel = parcel::orderBy('created_at', 'DESC')->get();
-        return $parcel;
+        $parcels = parcel::orderBy('created_at', 'DESC')->get();
+        foreach ($parcels as $parcel) {
+            $parcel->category = $parcel->category;
+        }
+        return $parcels;
     }
 
     public function asign_rider(Request $request)

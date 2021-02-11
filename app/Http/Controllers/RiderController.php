@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\rider;
 use App\Models\branch;
 use Illuminate\Http\Request;
+use App\Models\assigned_parcel;
 use Illuminate\Support\Facades\Hash;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -31,40 +32,58 @@ class RiderController extends Controller
                 $constraint->aspectRatio();
                 });
             $image_resize->orientate();
-            if($image_resize->save(storage_path('app/public/images/riders/'.$nameToStore))){
-                $rider = new rider;
-                $rider->firstname = $request->fname;
-                $rider->lastname = $request->lname;
-                $rider->phone = $request->phone;
-                $rider->email = $request->email;
-                $rider->plate_number = $request->plate_no;
-                $rider->photo = $nameToStore;
-                $rider->motorcycle = $request->details;
-                $rider->branch_id = $request->branch;
-                if($rider->save()){
-                    $createuser = $this->NewUser($rider->firstname, $rider->lastname, $rider->phone, $rider->email );
-                    return json_encode([
-                        'status' => 'success',
-                        'rider_id' => $rider->id,
-                        'message' => 'Rider information stored successfully'
-                    ]);
-                }else{
-                    unlink(storage_path('app/public/images/riders/'.$nameToStore));
-                    return json_encode([
-                        'status' => 'error',
-                        'message' => 'Unable to save riders details'
-                    ]);
-                }
-            }else{
+            if (User::where('email', $request->email)->orWhere('phone', $request->phone)->exists()) {
                 return json_encode([
                     'status' => 'error',
-                    'message' => 'An unexpected error occured while trying to save image file'
+                    'message' => 'User Records already exists and cannot be stored as a rider.'
                 ]);
+            }elseif (rider::where('email', $request->email)->orWhere('phone', $request->phone)->exists()) {
+                return json_encode([
+                    'status' => 'error',
+                    'message' => 'User Records already exists and cannot be stored as a rider.'
+                ]);
+            }elseif (rider::where('plate_number', $request->plate_no)->exists()) {
+                return json_encode([
+                    'status' => 'error',
+                    'message' => 'Duplicate plate number detected! Please confirm plate number and try again.'
+                ]);
+            } else {
+                if($image_resize->save(storage_path('app/public/images/riders/'.$nameToStore))){
+                    $rider = new rider;
+                    $rider->firstname = $request->fname;
+                    $rider->lastname = $request->lname;
+                    $rider->phone = $request->phone;
+                    $rider->email = $request->email;
+                    $rider->plate_number = $request->plate_no;
+                    $rider->photo = $nameToStore;
+                    $rider->motorcycle = $request->details;
+                    $rider->branch_id = $request->branch;
+                    if($rider->save()){
+                        $createuser = $this->NewUser($rider->firstname, $rider->lastname, $rider->phone, $rider->email );
+                        return json_encode([
+                            'status' => 'success',
+                            'rider_id' => $rider->id,
+                            'message' => 'Rider information stored successfully'
+                        ]);
+                    }else{
+                        unlink(storage_path('app/public/images/riders/'.$nameToStore));
+                        return json_encode([
+                            'status' => 'error',
+                            'message' => 'Unable to save riders details'
+                        ]);
+                    }
+                }else{
+                    return json_encode([
+                        'status' => 'error',
+                        'message' => 'An unexpected error occured while trying to save image file'
+                    ]);
+                }
             }
+            
         }else{
             return json_encode([
                 'status' => 'error',
-                'message' => 'Image file not found'
+                'message' => 'Image file not found! Please add an image for rider.'
             ]);
         }
         return $request;
@@ -81,7 +100,6 @@ class RiderController extends Controller
                 'usertype' => '1',
                 'password' => Hash::make('12345678'),
             ]);
-            $accessToken = $user->createToken('authToken')->accessToken;
         }
     }
 
@@ -108,6 +126,12 @@ class RiderController extends Controller
         
         foreach ($riders as $rider) {
             $rider->branch = $rider->branch;
+            $parcelArray = [];
+            $assigned = assigned_parcel::where('rider_id', $rider->id)->get();
+            foreach ($assigned as $value) {
+                array_push($parcelArray, $value->parcel);
+            }
+            $rider->parcel = $parcelArray;
         }
         return $riders;
     }

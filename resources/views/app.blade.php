@@ -18,18 +18,6 @@
         {{-- <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAdcDU38dn79bKr5pJwYxEt1deLz_Hz34E"></script> --}}
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
-        
-        {{-- <script type="module">
-            import * as PusherPushNotifications from "@pusher/push-notifications-web";
-            const beamsClient = new PusherPushNotifications.Client({
-              instanceId: 'e3767c79-1d0a-496a-818c-02ae3788a180',
-            });
-          
-            beamsClient.start()
-              .then(() => beamsClient.addDeviceInterest('hello'))
-              .then(() => console.log('Successfully registered and subscribed!'))
-              .catch(console.error);
-          </script> --}}
     </head>
     <body class="font-sans antialiased">
         @inertia

@@ -5,6 +5,16 @@
         Manage Riders
       </h2>
     </template>
+    
+    <transition name="fade"> 
+    <div v-if="(branches.length < 1) && (showAlert == true)"  class="max-w-7xl mx-auto py-3 px-4 bg-red-200 text-red-900">
+        <strong>No Branch Detected!</strong> you cannot add a rider without his branch specified. 
+        Kindly 
+        <inertia-link href="/Manage-Offices" class="bg-green-500 text-white cursor-pointer py-1 px-2 mx-1 rounded shadow"> Add Branch </inertia-link>   
+        before adding rider(s)
+    </div>
+    </transition>
+
     <div class="py-3 mt-4">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow sm:rounded-sm flex">
@@ -18,6 +28,7 @@
             <button
             @click="showModal = true"
               class="bg-gray-900 text-white cursor-pointer py-1 px-2 rounded shadow"
+              v-if="branches.length > 0"
             >
               <font-awesome-icon icon="plus" /> Add New Rider
             </button>
@@ -25,6 +36,7 @@
         </div>
       </div>
     </div>
+
     <div class="py-3">
       <riders-list :refresh="refresh_state"></riders-list>
     </div>
@@ -68,7 +80,7 @@
                         <input :class="inputStyles" id="plate_no" type="text" required v-model="plate_no" placeholder="Plate Number" />
                     </div>
                     <div class="mb-4">
-                        <label :class="labelStyles" for="mdetails"> Motorcycle Details <small>(Optional)</small> </label>
+                        <label :class="labelStyles" for="mdetails"> Motorcycle/Vehicle Details <small>(Optional)</small> </label>
                         <input :class="inputStyles" id="mdetails" type="text" v-model="mdetails" placeholder="Motorcycle Details (Optional)" />
                     </div>
                     <div class="mb-4">
@@ -80,7 +92,7 @@
                     </div>
                 </div>
                 
-                <div class="mb-4 text-right">
+                <div class="mb-2 text-right">
                     <button type="button" @click="closeModal()"
                     class="bg-red-500 text-white cursor-pointer py-1 px-2 rounded shadow"
                     >
@@ -89,8 +101,15 @@
                     <button type="submit"
                     class="bg-gray-900 text-white cursor-pointer py-1 px-2 rounded shadow"
                     >
-                        <font-awesome-icon :icon="['far', 'save']" /> Save Rider
+                        <font-awesome-icon v-if="processing == false" :icon="['far', 'save']" /> 
+                        <font-awesome-icon v-else :icon="['fas', 'circle-notch']" pulse /> 
+                        Save Rider
                     </button>
+                </div>
+                <div v-if="errors.length > 0" class="mt-4">
+                    <em v-for="(error, i) in errors" :key="i" class="text-red-600 text-sm font-bold">
+                        {{ error.message }}
+                    </em>
                 </div>
             </form>
         </div>
@@ -126,28 +145,46 @@
                 plate_no:'',
                 mdetails:'',
                 branches:[],
-                refresh_state:false
+                refresh_state:false,
+                showAlert:false,
+                errors:[],
+                processing:false,
             }
         },
         mounted(){
             this.fetchBraches();
+            setTimeout(() => {
+                this.showAlert = true;
+            }, 1000);
         },
         methods:{
             closeModal(){
                 this.showModal = false;
             },
             fetchBraches(){
+                this.errors = [];
                 HttpClient.client
                 .post('/branch/fetch_all')
                 .then((response) => {
                     this.branches  = response.data;
                 })
+                .catch((error) => {
+                    if(error.response){
+                        this.errors.push({message:error.response.message.data});
+                        console.log(error.response.message.data);
+                    }else{
+                        this.errors.push({message:`An error occured and might be due to Network!
+                                                    Please check your network connection.`});
+                        console.log('An error occured due to Network!');
+                    }
+                });
             },
             saveRider(){
+                this.errors = [];
+                this.processing = true;
                 this.image = document.querySelector('#simage').files[0];
                 // create a new form data object
                 let data = new FormData();
-
                 // append data to the form data object
                 data.append('image', this.image);
                 data.append('lname', this.lname);
@@ -164,28 +201,37 @@
                     this.handleSaveResponse(response.data);
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
-                }
+                    this.processing = false;
+                    if(error.response){
+                        this.errors.push({message:error.response.message.data});
+                        console.log(error.response.message.data);
+                    }else{
+                        this.errors.push({message:`An error occured and might be due to Network!
+                                                    Please check your network connection.`});
+                        console.log('An error occured due to Network!');
+                    }
                 console.log(error);
                 });
             },
             handleSaveResponse(response){
-                this.fname = '';
-                this.lname = '';
-                this.phone = '';
-                this.email = '';
-                this.sbranch = '';
-                this.mdetails = '';
-                this.plate_no = '';
-                document.forms[0].reset();
-                this.closeModal();
-                this.refresh_state = true;
-                setTimeout(() => {
-                    this.refresh_state = false;
-                }, 1000);
+                if (response.status == 'success') {
+                    this.fname = '';
+                    this.lname = '';
+                    this.phone = '';
+                    this.email = '';
+                    this.sbranch = '';
+                    this.mdetails = '';
+                    this.plate_no = '';
+                    document.forms[0].reset();
+                    this.processing = false;
+                    this.closeModal();
+                    this.refresh_state = true;
+                    setTimeout(() => {
+                        this.refresh_state = false;
+                    }, 1000);
+                }else{
+                    this.errors.push({message:response.message});
+                }
             },
             BrowseImage(){
                 document.getElementById('simage').click();
@@ -202,3 +248,12 @@
         }
     }
 </script>
+
+<style scoped>
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to { /* .fade-leave-active below version 2.1.8 */
+        opacity: 0;
+    }
+</style>
