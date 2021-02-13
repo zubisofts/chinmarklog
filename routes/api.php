@@ -64,7 +64,10 @@ Route::group(['prefix' => 'parcel'], function () {
     // Pickup Reuest/Management
     Route::group(['prefix' => 'pickup'], function () {
         Route::post('/list', [ParcelController::class, 'pick_list']);
+        Route::post('/riderlist', [ParcelController::class, 'rider_pick_list']);
         Route::post('asign_rider', [ParcelController::class, 'asign_pickup_rider']);
+        Route::post('decline_pickup', [ParcelController::class, 'decline_pickup']);
+        Route::post('confirm_pickup', [ParcelController::class, 'confirm_pickup']);
     });
 
     // Parcel Categories Management Routes in the Parcel Route Group
@@ -100,4 +103,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/confirm', [HomeController::class, 'confirm_parcel']);
     Route::post('/update_parcel_status', [HomeController::class, 'update_parcel_status']);
     Route::post('/update_profile', [HomeController::class, 'update_profile']);
+    Route::post('/pickup_list', [HomeController::class, 'rider_pick_list']);
+    Route::post('/decline_pickup', [HomeController::class, 'decline_pickup']);
+    Route::post('/confirm_pickup', [HomeController::class, 'confirm_pickup']);
 });

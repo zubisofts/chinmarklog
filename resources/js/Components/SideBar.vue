@@ -130,7 +130,13 @@
                     href="/Parcels" :active="$page.currentRouteName == 'rider_parcel'">
                     <font-awesome-icon icon="gift" class="text-xl" />
 
-                    <span class="mx-3">Parcels</span>
+                    <span class="mx-3">Assigned Parcels</span>
+                </inertia-link>
+                <inertia-link class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+                    href="/Instant-Pickups" :active="$page.currentRouteName == 'pickups'">
+                    <font-awesome-icon icon="shipping-fast" class="text-xl" />
+
+                    <span class="mx-3">Instant Pickups</span>
                 </inertia-link>
             </span>
 

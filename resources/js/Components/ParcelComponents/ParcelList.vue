@@ -137,8 +137,8 @@
     <!-- Modal -->
     <modal-component :prop-show="showDetails" @closeModal="closeModal()">
         <template #title>
-             <div class="bg-red-500 text-white px-4 pt-2 pb-1 rounded-t">
-                <div class="mb-4">
+             <div class="bg-red-600 text-white px-4 py-2 rounded-t">
+                <div>
                     <h2 class="text-lg font-bold">
                         Parcel Details
                     </h2>
@@ -186,7 +186,7 @@
                     </div>
                 </div>
             </div>
-            <hr>
+            <hr class="my-3">
             <div v-if="sel_parcel.status == 'unassigned' || sel_parcel.status == 'assigned'">
                 <div class="mb-4">
                     <h2 class="text-lg font-bold">
@@ -217,6 +217,12 @@
                                 <font-awesome-icon :icon="['fas', 'arrow-right']" />   
                                 <font-awesome-icon :icon="['fas', 'gift']" />   
                             </button>
+                        </div>
+                        
+                        <div v-if="errors.length > 0" class="mt-4">
+                            <em v-for="error in errors" :key="error" class="text-red-600 text-sm font-bold">
+                                {{ error.message }}
+                            </em>
                         </div>
                     </div>
                 </form>

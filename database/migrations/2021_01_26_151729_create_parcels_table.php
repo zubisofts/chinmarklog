@@ -29,7 +29,7 @@ class CreateParcelsTable extends Migration
             $table->foreign('category_id')->references('id')->on('parcel_categories')->onDelete('cascade');
             $table->string('weight')->nullable();
             $table->mediumText('description')->nullable();
-            $table->unsignedBigInteger('current_address');
+            $table->unsignedBigInteger('current_address')->nullable();
             $table->foreign('current_address')->references('id')->on('states')->onDelete('cascade');
             $table->enum('status', ['unassigned', 'assigned', 'transit', 'stopped', 'delivered'])->default('unassigned');
             $table->timestamps();

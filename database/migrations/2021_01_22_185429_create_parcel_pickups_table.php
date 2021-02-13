@@ -27,7 +27,7 @@ class CreateParcelPickupsTable extends Migration
             $table->foreign('category_id')->references('id')->on('parcel_categories')->onDelete('cascade');
             $table->string('weight')->nullable();
             $table->mediumText('description')->nullable();
-            $table->enum('status', ['unseen', 'seen', 'saved', 'declined'])->default('unseen');
+            $table->enum('status', ['unseen', 'seen', 'assigned', 'saved', 'declined'])->default('unseen');
             $table->timestamps();
         });
     }

@@ -36,7 +36,7 @@ class ParcelController extends Controller
         $pp->weight = $request->weight;
         $pp->description = $request->message;
         if($pp->save()){
-            $notify->saveNotice('There is a new pickup request from ' . $pp->sender, 'pickup');
+            // $notify->saveNotice('There is a new pickup request from ' . $pp->sender, 'pickup');
             return json_encode([
                 'status' => 'success',
                 'message' => 'Your <strong>Pickup Request</strong> was well received and is being processed! We will get back to you shortly.'
@@ -329,6 +329,90 @@ class ParcelController extends Controller
         return $pickups;
     }
 
+    public function rider_pick_list(Request $request)
+    {
+        $rider = rider::where('email', $request->user['email'])->first();
+        $parcelArray = [];
+        $assigned = assigned_pickup::where('rider_id', $rider->id)->get();
+        foreach ($assigned as $value) {
+            $value->pickup->category = $value->pickup->category;
+            array_push($parcelArray, $value->pickup);
+        }
+        return $parcelArray;
+    }
+
+    public function decline_pickup(Request $request)
+    {
+        $rider = rider::where('email', $request->user['email'])->first();
+        if(assigned_pickup::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->delete()){
+            $parcel = parcel_pickup::where('id', $request->parcelid)->first();
+            $parcel->status = 'seen';
+            $parcel->update();
+            return response()->json([
+                'status' => 'success'
+            ], 200);
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Could not decline the request!'
+            ], 200);
+        }
+    }
+    
+    public function confirm_pickup(Request $request)
+    {
+        $rider = rider::where('email', $request->user['email'])->first();
+        if(assigned_pickup::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->exists()){
+            // Create a new Parcel with pickup data
+            $pickup = parcel_pickup::where('id', $request->parcelid)->first();
+            $parcel = new parcel;
+            $parcel->trackingid = \Str::random(6);
+            $parcel->sender = $pickup->sender;
+            $parcel->reciever = $pickup->reciever;
+            $parcel->sender_phone = $pickup->sender_phone;
+            $parcel->reciever_phone = $pickup->reciever_phone;
+            $parcel->sender_email = $pickup->sender_email;
+            $parcel->reciever_email = $pickup->reciever_email;
+            $parcel->reciever_address = $pickup->delivery_location;
+            $parcel->weight = $pickup->weight;
+            $parcel->category_id = $pickup->category_id;
+            $parcel->description = $pickup->description;
+            if($parcel->save()){
+                // Updated the pickup status to saved
+                $pickup->status = 'saved';
+                $pickup->update();
+                // Assign parcel to the same rider
+                $assignment = assigned_pickup::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->first();
+                $assign = new assigned_parcel;
+                $assign->parcel_id = $parcel->id;
+                $assign->rider_id = $assignment->rider_id;
+                $assign->description = "You have confirmed the pickup request with tracking id: '" . $parcel->trackingid . "' for transit.";
+                if($assign->save()){
+                    $parcel->status = 'transit';
+                    $parcel->update();
+                    return response()->json([
+                        'status' => 'success'
+                    ], 200);
+                }else{
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Parcel saved but could not be assigned to you for transit.'
+                    ], 200);
+                }
+            }else{
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Could not save the pickup as parcel due to an unexpected error! Please try again.'
+                ], 200);
+            }
+        }else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You do not have the permission to confirm this parcel.'
+            ], 200);
+        }
+    }
+
     public function asign_pickup_rider(Request $request)
     {
         if(!assigned_pickup::where('rider_id', $request->riderid)->where('parcel_id', $request->parcelid)->exists()){
@@ -360,6 +444,7 @@ class ParcelController extends Controller
         }
     }
 
+    // Quote Management
     public function request_quote(Request $request)
     {
         $quote_request = new quote_request;

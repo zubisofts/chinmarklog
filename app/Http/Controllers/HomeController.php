@@ -7,7 +7,9 @@ use App\Models\rider;
 use App\Models\parcel;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\parcel_pickup;
 use App\Models\assigned_parcel;
+use App\Models\assigned_pickup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -236,8 +238,16 @@ class HomeController extends Controller
     public function update_profile(Request $request)
     {
         if($request->has('password')){
-            // Hash::
-            $request->user()->password = Hash::make($request->password);
+            // Check if old password matches the current password
+            if(Hash::check($request->old_password, $request->user()->password)){
+                $request->user()->password = Hash::make($request->password);
+            }else{
+                return response(json_encode([
+                    'status' =>'error',
+                    'message' =>"Wrong password. Please specify your old password correctly before changing to a new one.",
+                    'result' => []
+                ]), 200);
+            }
         }
 
         $request->user()->update();
@@ -247,5 +257,105 @@ class HomeController extends Controller
             'result' => []
         ]), 200);
     }
+
+    // Pickup Requests
+    public function rider_pick_list(Request $request)
+    {
+        $rider = rider::where('email', $request->user()->email)->first();
+        $parcelArray = [];
+        $assigned = assigned_pickup::where('rider_id', $rider->id)->get();
+        foreach ($assigned as $value) {
+            $value->pickup->category = $value->pickup->category;
+            array_push($parcelArray, $value->pickup);
+        }
+        return response(json_encode([
+            'status' =>'success',
+            'message' =>"Profile Updated successfully.",
+            'result' => [
+                'pickup_list' => $parcelArray
+            ]
+        ]), 200);
+    }
+
+    public function decline_pickup(Request $request)
+    {
+        $rider = rider::where('email', $request->user()->email)->first();
+        if(assigned_pickup::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->delete()){
+            $parcel = parcel_pickup::where('id', $request->parcelid)->first();
+            $parcel->status = 'seen';
+            $parcel->update();
+            return response(json_encode([
+                'status' =>'success',
+                'message' =>"Pickup Declined successfully.",
+                'result' => []
+            ]), 200);
+        }else{
+            return response(json_encode([
+                'status' =>'error',
+                'message' =>"Could not decline the pickup request. Please try again.",
+                'result' => []
+            ]), 200);
+        }
+    }
+    
+    public function confirm_pickup(Request $request)
+    {
+        $rider = rider::where('email', $request->user()->email)->first();
+        if(assigned_pickup::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->exists()){
+            // Create a new Parcel with pickup data
+            $pickup = parcel_pickup::where('id', $request->parcelid)->first();
+            $parcel = new parcel;
+            $parcel->trackingid = \Str::random(6);
+            $parcel->sender = $pickup->sender;
+            $parcel->reciever = $pickup->reciever;
+            $parcel->sender_phone = $pickup->sender_phone;
+            $parcel->reciever_phone = $pickup->reciever_phone;
+            $parcel->sender_email = $pickup->sender_email;
+            $parcel->reciever_email = $pickup->reciever_email;
+            $parcel->reciever_address = $pickup->delivery_location;
+            $parcel->weight = $pickup->weight;
+            $parcel->category_id = $pickup->category_id;
+            $parcel->description = $pickup->description;
+            if($parcel->save()){
+                // Updated the pickup status to saved
+                $pickup->status = 'saved';
+                $pickup->update();
+                // Assign parcel to the same rider
+                $assignment = assigned_pickup::where('rider_id', $rider->id)->where('parcel_id', $request->parcelid)->first();
+                $assign = new assigned_parcel;
+                $assign->parcel_id = $parcel->id;
+                $assign->rider_id = $assignment->rider_id;
+                $assign->description = "You have confirmed the pickup request with tracking id: '" . $parcel->trackingid . "' for transit.";
+                if($assign->save()){
+                    $parcel->status = 'transit';
+                    $parcel->update();
+                    return response(json_encode([
+                        'status' =>'success',
+                        'message' => "You have confirmed the pickup request with tracking id: '" . $parcel->trackingid . "' for transit.",
+                        'result' => []
+                    ]), 200);
+                }else{
+                    return response(json_encode([
+                        'status' =>'error',
+                        'message' =>"Parcel saved but could not be assigned to you for transit.",
+                        'result' => []
+                    ]), 200);
+                }
+            }else{
+                return response(json_encode([
+                    'status' =>'error',
+                    'message' =>"Could not save the pickup as parcel due to an unexpected error! Please try again.",
+                    'result' => []
+                ]), 200);
+            }
+        }else{
+            return response(json_encode([
+                'status' =>'error',
+                'message' =>"You do not have the permission to confirm this parcel.",
+                'result' => []
+            ]), 200);
+        }
+    }
+
 
 }
