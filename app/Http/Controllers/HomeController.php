@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
+use Intervention\Image\ImageManagerStatic as Image;
+
 class HomeController extends Controller
 {
     public function register(Request $request)
@@ -181,7 +183,7 @@ class HomeController extends Controller
 
     public function update_parcel_status(Request $request)
     {
-        $parcelid = $request->parcel_id;
+        // $parcelid = $request->parcel_id;
         if($request->action == 'stop_parcel'){
             $parcel = parcel::where('id', $request->parcelid)->first();
             $parcel->status = 'stopped';
@@ -250,12 +252,21 @@ class HomeController extends Controller
             }
         }
 
-        $request->user()->update();
-        return response(json_encode([
+        $update=$request->user()->update();
+        if($update){
+            return response(json_encode([
             'status' =>'success',
             'message' =>"Profile Updated successfully.",
             'result' => []
         ]), 200);
+        }else{
+            return response(json_encode([
+                'status' =>'error',
+                'message' =>"Unable to chnage password, make sure you entered the correct password.",
+                'result' => []
+            ]), 200);
+        }
+        
     }
 
     // Pickup Requests
