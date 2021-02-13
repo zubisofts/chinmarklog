@@ -226,6 +226,12 @@
                             </button>
                         </div>
                     </div>
+
+                    <div v-if="errors.length > 0" class="mt-4">
+                        <em v-for="error in errors" :key="error" class="text-red-600 text-sm font-bold">
+                            {{ error.message }}
+                        </em>
+                    </div>
                 </form>
             </div>
         </div>
@@ -257,7 +263,8 @@ data() {
         srider:'',
         sstate:'0',
         states:[],
-        riders:[]
+        riders:[],
+        errors:[]
     };
 },
 watch:{
@@ -274,6 +281,7 @@ mounted() {
 },
 methods: {
         fetchRequestList() {
+            this.errors = [];
         // Url to fetch the list of rented vehicles
         var url = "/parcel/pickup/list";
         // send a post http request to fetch list of rental vehicles
@@ -283,15 +291,19 @@ methods: {
                 this.handleParcelList(response.data);
             })
             .catch((error) => {
-            if (error.response) {
-                console.log(error.response.data.message);
-            } else {
-                console.log("An error occoured probably due to network!");
-            }
+                if(error.response){
+                    this.errors.push({message:error.response.message.data});
+                    console.log(error.response.message.data);
+                }else{
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
+                }
             console.log(error);
             });
         },
         loadStates(){
+            this.errors =[];
             HttpClient.client
             .post("/parcel/fetch_states")
             .then((response) => {
@@ -299,9 +311,12 @@ methods: {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -322,16 +337,20 @@ methods: {
             this.showDetails = true;
         },
         fetchRidersList() {
+            this.errors =[];
             HttpClient.client
                 .post('/riders/fetch', {filter: this.sstate, filter_by:'state_id'})
                 .then((response) => {
                     this.riders = response.data;
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
+                if(error.response){
+                    this.errors.push({message:error.response.message.data});
+                    console.log(error.response.message.data);
+                }else{
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
                 // console.log(error);
             });
@@ -340,6 +359,7 @@ methods: {
 
         },
         assignRider(parcelid){
+            this.errors = [];
             let data = {
                 parcelid: parcelid,
                 riderid: this.srider
@@ -350,10 +370,13 @@ methods: {
                     this.handleAssignSuccess(response.data)
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
+                if(error.response){
+                    this.errors.push({message:error.response.message.data});
+                    console.log(error.response.message.data);
+                }else{
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
                 // console.log(error);
             });
@@ -363,7 +386,7 @@ methods: {
                 this.fetchRequestList();
                 this.closeModal();
             }else{
-                console.log(res);
+                this.errors.push({message:res.message});
             }
         }
 },

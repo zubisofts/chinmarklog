@@ -116,14 +116,78 @@
                 </div>
                 <div>
                     <ul>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
-                        <li><strong>Firstname: </strong> {{ sel_rider.firstname }} </li>
+                        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-3">
+                            <li class="mb-2">
+                                <strong class="block text-sm text-red-600">Firstname: </strong>
+                                <span class="text-base font-bold">{{ sel_rider.firstname }} </span>
+                            </li>
+                            <li class="mb-2">
+                                <strong class="block text-sm text-red-600">Lastname: </strong>
+                                <span class="text-base font-bold">{{ sel_rider.lastname }} </span>
+                            </li>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-3">
+                            <li class="mb-2">
+                                <strong class="block text-sm text-red-600">Phone Number: </strong>
+                                <span class="text-base font-bold">{{ sel_rider.phone }} </span>
+                            </li>
+                            <li class="mb-2">
+                                <strong class="block text-sm text-red-600">Plate Number: </strong>
+                                <span class="text-base font-bold">{{ sel_rider.plate_number }} </span>
+                            </li>
+                        </div>
+                        <li class="mb-2">
+                            <strong class="block text-sm text-red-600">Email Address: </strong>
+                            <span class="text-base font-bold">{{ sel_rider.email }} </span>
+                        </li>
+                        <li class="mb-2">
+                            <strong class="block text-sm text-red-600">Branch: </strong>
+                            <span class="text-base font-bold" v-if="sel_rider.branch">{{ sel_rider.branch.name }} </span>
+                        </li>
+                        <li class="mb-2">
+                            <strong class="block text-sm text-red-600">Other Info.: </strong>
+                            <span class="text-base font-bold" v-html="sel_rider.motorcycle"> </span>
+                        </li>
                     </ul>
                 </div>
             </div>
+            <div class="my-2 p-3 bg-red-600 text-white">
+                <span class="font-bold">
+                    Assigned Parcels
+                </span>
+            </div>
+            <table class="min-w-full leading-normal">
+                <thead class="bg-red-600 text-white font-bold" v-if="sel_rider.parcel && sel_rider.parcel.length > 0">
+                    <tr>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider">Parcel ID</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider">Destination</th>
+                        <th class="px-5 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold uppercase tracking-wider">Status</th>
+                    </tr>
+                </thead>
+                <tbody v-if="sel_rider.parcel && sel_rider.parcel.length > 0">
+                    <tr v-for="(parcel, i) in sel_rider.parcel" :key="i">
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"> {{ parcel.trackingid }} </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"> {{ parcel.reciever_address }} </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm"> 
+                            <font-awesome-icon :icon="['fas', 'gift']" style="font-size:1.2rem;" class="text-gray-700" v-if="parcel.status == 'unassigned'" />
+                            <font-awesome-icon :icon="['fas', 'gift']" style="font-size:1.2rem;" class="text-blue-700" v-if="parcel.status == 'assigned'" />
+                            <font-awesome-icon :icon="['fas', 'shipping-fast']" style="font-size:1.2rem;" class="text-green-600" v-if="parcel.status == 'transit'" />
+                            <font-awesome-icon :icon="['far', 'stop-circle']" style="font-size:1.2rem;" class="text-red-600" v-if="parcel.status == 'stopped'" />
+                            <font-awesome-icon :icon="['fas', 'check-circle']" style="font-size:1.2rem;" class="text-green-600" v-if="parcel.status == 'delivered'" />
+                            <span class="text-gray-700" v-if="parcel.status == 'unassigned'">{{ parcel.status }}</span>
+                            <span class="text-blue-700" v-if="parcel.status == 'assigned'">{{ parcel.status }}</span>
+                            <span class="text-green-600" v-if="parcel.status == 'transit'" >{{ parcel.status }}</span>
+                            <span class="text-red-600" v-if="parcel.status == 'stopped'">{{ parcel.status }}</span>
+                            <span class="text-green-600" v-if="parcel.status == 'delivered'">{{ parcel.status }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-else>
+                    <tr>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">No Parcel Assigned to {{ sel_rider.firstname }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </modal-component>
 </div>

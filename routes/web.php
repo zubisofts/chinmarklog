@@ -77,6 +77,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
         return Inertia\Inertia::render('PickupRequestPage');
     })->name('pickups');
     
+    Route::get('/Instant-Pickups', function () {
+        return Inertia\Inertia::render('RiderPickupPage');
+    })->name('pickups');
+    
     Route::get('/Manage-Requested-Quotes', function () {
         return Inertia\Inertia::render('QuoteFeedbackPage');
     })->name('quote_feedback');

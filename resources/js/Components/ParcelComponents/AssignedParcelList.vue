@@ -114,13 +114,55 @@
     </div>
     <!-- Modal -->
     <modal-component :prop-show="showDetails" @closeModal="closeModal()">
-        <div>
-            <div class="">
-                <div class="mb-4">
+        <template #title>
+             <div class="bg-red-600 text-white px-4 py-2 rounded-t">
+                <div>
                     <h2 class="text-lg font-bold">
                         Parcel Details
                     </h2>
                 </div>
+            </div>
+        </template>
+            <div class="">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Tracking ID</label>
+                        <span class="block font-semibold">{{ sel_parcel.trackingid }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Parcel Category</label>
+                        <span class="block font-semibold" v-if="sel_parcel.category">{{ sel_parcel.category.category }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Reciever</label>
+                        <span class="block font-semibold">{{ sel_parcel.reciever }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Reveiver's Phone</label>
+                        <span class="block font-semibold">{{ sel_parcel.reciever_phone }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Reveiver's Email</label>
+                        <span class="block font-semibold">{{ sel_parcel.reciever_email }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Sender</label>
+                        <span class="block font-semibold">{{ sel_parcel.sender }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Sender's Phone</label>
+                        <span class="block font-semibold">{{ sel_parcel.sender_phone }}</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-sm text-red-600">Sender's Email</label>
+                        <span class="block font-semibold">{{ sel_parcel.sender_email }}</span>
+                    </div>
+                    <div class="mb-3 col-span-2">
+                        <label class="text-sm text-red-600">Additional Info.</label>
+                        <span class="block font-semibold">{{ sel_parcel.description }}</span>
+                    </div>
+                </div>
+            <hr class="my-3">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4" v-if="sel_parcel.status == 'assigned'">
                     <div class="mb-4 col-span-2">
                         <button type="button" @click="confirmParcel" class="col-span-2 mx-1 rounded-md border border-transparent px-2 py-1 bg-green-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-black focus:outline-none focus:border-yellow-700 focus:shadow-outline-yellow transition ease-in-out duration-150 sm:text-sm sm:leading-5">
@@ -130,6 +172,12 @@
                             <font-awesome-icon :icon="['fas', 'times-circle']" /> Decline Parcel  
                         </button>
                     </div>
+                    
+                    <div v-if="errors.length > 0" class="mt-4">
+                        <em v-for="error in errors" :key="error" class="text-red-600 text-sm font-bold">
+                            {{ error.message }}
+                        </em>
+                    </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4" v-else>
                     <div class="mb-4 col-span-2 text-sm text-red-500">
@@ -137,8 +185,6 @@
                     </div>
                 </div>
             </div>
-            
-        </div>
     </modal-component>
 
 </div>
@@ -168,7 +214,8 @@ data() {
         sstate:'0',
         states:[],
         riders:[],
-        user: this.$page.user
+        user: this.$page.user,
+        errors:[]
     };
 },
 watch:{
@@ -185,21 +232,26 @@ mounted() {
 },
 methods: {
     fetchParcelList() {
+        this.errors = [];
     HttpClient.client
         .post('/parcel/rider_parcel/fetch_list', {filter: this.filter, user:this.user})
         .then((response) => {
             this.handleParcelList(response.data);
         })
         .catch((error) => {
-        if (error.response) {
-            console.log(error.response.data.message);
-        } else {
-            console.log("An error occoured probably due to network!");
-        }
-        console.log(error);
+            if(error.response){
+                this.errors.push({message:error.response.message.data});
+                console.log(error.response.message.data);
+            }else{
+                this.errors.push({message:`An error occured and might be due to Network!
+                                                Please check your network connection.`});
+                console.log('An error occured due to Network!');
+            }
+            console.log(error);
         });
     },
     loadStates(){
+        this.errors = [];
             HttpClient.client
             .post("/parcel/fetch_states")
             .then((response) => {
@@ -207,9 +259,12 @@ methods: {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                    Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -229,21 +284,26 @@ methods: {
             this.showDetails = true;
         },
         fetchRidersList() {
+            this.errors = [];
             HttpClient.client
                 .post('/riders/fetch', {filter: this.sstate, filter_by:'id'})
                 .then((response) => {
                     this.riders = response.data;
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
-                }
+                    if(error.response){
+                        this.errors.push({message:error.response.message.data});
+                        console.log(error.response.message.data);
+                    }else{
+                        this.errors.push({message:`An error occured and might be due to Network!
+                                                        Please check your network connection.`});
+                        console.log('An error occured due to Network!');
+                    }
                 // console.log(error);
             });
         },
         assignRider(parcelid){
+            this.errors= [];
             let data = {
                 parcelid: parcelid,
                 riderid: this.srider
@@ -254,11 +314,14 @@ methods: {
                     this.handleAssignSuccess(response.data)
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
-                }
+                    if(error.response){
+                        this.errors.push({message:error.response.message.data});
+                        console.log(error.response.message.data);
+                    }else{
+                        this.errors.push({message:`An error occured and might be due to Network!
+                                                        Please check your network connection.`});
+                        console.log('An error occured due to Network!');
+                    }
                 // console.log(error);
             });
         },
@@ -267,10 +330,11 @@ methods: {
                 this.fetchParcelList();
                 this.closeModal();
             }else{
-                console.log(res);
+                this.errors.push({message:res.message});
             }
         },
         confirmParcel(){
+            this.errors = [];
             let data = {
                 parcelid : this.sel_parcel.id,
                 user : this.user
@@ -281,11 +345,14 @@ methods: {
                     this.handleDeclineSuccess(response.data)
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
-                }
+                    if(error.response){
+                        this.errors.push({message:error.response.message.data});
+                        console.log(error.response.message.data);
+                    }else{
+                        this.errors.push({message:`An error occured and might be due to Network!
+                                                        Please check your network connection.`});
+                        console.log('An error occured due to Network!');
+                    }
                 // console.log(error);
             });
         },
@@ -294,10 +361,11 @@ methods: {
                 this.fetchParcelList();
                 this.closeModal();
             }else{
-                console.log(res);
+                this.errors.push({message:res.message});
             }
         },
         declineParcel(){
+            this.errors = [];
             let data = {
                 parcelid : this.sel_parcel.id,
                 user : this.user
@@ -308,11 +376,14 @@ methods: {
                     this.handleDeclineSuccess(response.data)
                 })
                 .catch((error) => {
-                if (error.response) {
-                    console.log(error.response.data.message);
-                } else {
-                    console.log("An error occoured probably due to network!");
-                }
+                    if(error.response){
+                        this.errors.push({message:error.response.message.data});
+                        console.log(error.response.message.data);
+                    }else{
+                        this.errors.push({message:`An error occured and might be due to Network!
+                                                        Please check your network connection.`});
+                        console.log('An error occured due to Network!');
+                    }
                 // console.log(error);
             });
         },
@@ -321,7 +392,7 @@ methods: {
                 this.fetchParcelList();
                 this.closeModal();
             }else{
-                console.log(res);
+                this.errors.push({message:res.message});
             }
         },
 },

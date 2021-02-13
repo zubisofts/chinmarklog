@@ -2,7 +2,7 @@
     <transition name="fade">
         <div v-if="showModal" id="modal" class="h-full fixed top-0 left-0 w-full flex content-center flex-wrap">
             <!-- Modal Content -->
-            <div :class="'modal-'+propSize" class="bg-white modal-dialog shadow rounded mx-auto flex flex-col w-full  mt-8 transform transition-all" style="max-height:96vh;">
+            <div :class="'modal-'+propSize" class="bg-white modal-dialog shadow rounded mx-auto flex flex-col w-full  mt-8 transform transition-all" style="max-height:96vh; max-width:90%;">
                 <div>
                     <button class="float-right mt-4 mr-6 font-light" @click="closeModal" >
                         <font-awesome-icon icon="times" class="font-light" style="font-size:1.3rem; font-weight:normal;" />

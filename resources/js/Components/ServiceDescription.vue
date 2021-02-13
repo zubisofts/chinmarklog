@@ -122,7 +122,7 @@
                         <h2 class="mb-3 font-bold text-red-600 text-2xl">Fast Delivery</h2>
                         <p>
                             Our riders realiable and deliver speedily without stories. Buy it, we deliver 24/7, 
-                            No stress, No stories.
+                            No stress, No worries and No stories.
                         </p>
                     </div>
                 </div>

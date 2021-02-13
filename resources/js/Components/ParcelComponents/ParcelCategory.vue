@@ -20,6 +20,11 @@
                             <font-awesome-icon :icon="['far', 'save']" />  Save
                         </button>
                     </div>
+                    <div v-if="errors.length > 0" class="mt-4">
+                        <em v-for="error in errors" :key="error" class="text-red-600 text-sm font-bold">
+                            {{ error.message }}
+                        </em>
+                    </div>
                 </form>
                 
                 <div class="mt-3 px-4 pb-2" v-if="categories.length > 0">
@@ -42,7 +47,9 @@ export default {
     data(){
         return {
             category:'',
-            categories:[]
+            categories:[],
+            showAlert:false,
+            errors:[]
         }
     },
     beforeMount(){
@@ -50,6 +57,7 @@ export default {
     },
     methods:{
         saveCategory(){
+            this.errors = [];
             let data = new FormData();
 
             data.append('category', this.category);
@@ -61,9 +69,12 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -73,10 +84,11 @@ export default {
                 this.category = '';
                 document.forms['form_category'].reset();
             }else{
-                console.log(data.message);
+                this.errors.push({message:data.message});
             }
         },
         loadCategory(){
+            this.errors = [];
             HttpClient.client
             .post("/parcel/category/fetch")
             .then((response) => {
@@ -84,13 +96,17 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
         deleteCategory(id){
+            this.errors = [];
             {HttpClient.client
             .delete(`/parcel/category/delete?id=${id}`)
             .then((response) => {
@@ -98,9 +114,12 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });}
         }

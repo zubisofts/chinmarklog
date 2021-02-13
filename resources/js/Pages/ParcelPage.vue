@@ -6,6 +6,16 @@
             </h2>
         </template>
 
+        <transition name="fade"> 
+        <div v-if="(states.length < 1) && (showAlert == true)" class="max-w-7xl mx-auto py-3 px-4 bg-red-200 text-red-900">
+            <strong>No State Detected!</strong> You maybe required to specify the parcel departure and destination state. 
+            Please add states first.
+        </div>
+        <div v-if="(categories.length < 1) && (showAlert == true)" class="max-w-7xl mx-auto py-3 px-4 bg-red-200 text-red-900">
+            <strong>No Category Record!</strong> Every parcel must belong to a particular category. Kindly add a new category.
+        </div>
+        </transition>
+
         <!-- Header -->
         <div class="py-3 mt-4">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -20,6 +30,7 @@
                         <button
                         @click="showAddModal = true"
                         class="bg-gray-900 text-white cursor-pointer py-1 px-2 rounded shadow"
+                        v-if="(categories.length > 0) && (states.length > 0)"
                         >
                             <font-awesome-icon icon="plus" /> <span class="hidden md:inline">Add</span> New Parcel
                         </button>
@@ -101,7 +112,7 @@
                             <input :class="inputStyles" id="weight" type="text" v-model="weight" placeholder="Lenght x Width x Height (kg)" />
                         </div>
                         <div class="mb-4">
-                            <label :class="labelStyles" for="paddress"> Current Address </label>
+                            <label :class="labelStyles" for="paddress"> Parcel Current State </label>
                             <select :class="inputStyles" v-model="paddress" placeholder="Reciever's state">
                                 <option v-for="state in states" :key="state.id" :value="state.id"> {{ state.name }} </option>
                             </select>
@@ -120,6 +131,11 @@
                             <font-awesome-icon :icon="['far', 'save']" />  Save Branch
                         </button>
                     </div>
+                </div>
+                <div v-if="errors.length > 0" class="mt-4">
+                    <em v-for="error in errors" :key="error" class="text-red-600 text-sm font-bold">
+                        {{ error.message }}
+                    </em>
                 </div>
             </form>
         </modal-component>
@@ -157,7 +173,9 @@ export default {
             sstate:'',
             paddress:'',
             weight:'',
-            desc:''
+            desc:'',
+            errors:[],
+            showAlert:false
 
         }
     },
@@ -167,6 +185,9 @@ export default {
     },
     mounted(){
         this.loadStates();
+        setTimeout(() => {
+            this.showAlert = true;
+        }, 1500);
     },
     methods:{
         fetchCategories(){
@@ -177,6 +198,7 @@ export default {
             })
         },
         loadStates(){
+            this.errors = [];
             HttpClient.client
             .post("/parcel/fetch_states")
             .then((response) => {
@@ -184,9 +206,12 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                    Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -196,6 +221,7 @@ export default {
             this.fetchCategories();
         },
         storeParcel(){
+            this.errors = [];
             let data = {
                 sender:this.sender,
                 sphone:this.sphone,
@@ -218,9 +244,12 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                    Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -228,6 +257,8 @@ export default {
             if(data.status == 'success'){
                 this.refresh_state = true;
                 this.closeModal();
+            }else{
+                this.errors.push({message:data.message});
             }
         }
     }

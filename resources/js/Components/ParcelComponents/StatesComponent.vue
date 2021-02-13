@@ -25,6 +25,11 @@
                         <button type="submit" class="col-span-2 mx-1 rounded-md border border-transparent px-2 py-1 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-black focus:outline-none focus:border-yellow-700 focus:shadow-outline-yellow transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                             <font-awesome-icon :icon="['far', 'save']" />  Save
                         </button>
+                        <div v-if="errors.length > 0" class="mt-4">
+                            <em v-for="error in errors" :key="error" class="text-red-600 text-sm font-bold">
+                                {{ error.message }}
+                            </em>
+                        </div>
                     </div>
                 </form>
                 
@@ -49,7 +54,8 @@ export default {
         return {
             state:'',
             slug:'',
-            states:[]
+            states:[],
+            errors:[]
         }
     },
     beforeMount(){
@@ -68,9 +74,12 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -82,6 +91,7 @@ export default {
                 this.slug = '';
                 document.forms['form_state'].reset();
             }else{
+                this.errors.push({message:data.message});
                 console.log(data.message);
             }
         },
@@ -93,9 +103,12 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });
         },
@@ -107,9 +120,12 @@ export default {
             })
             .catch((error) => {
                 if(error.response){
+                    this.errors.push({message:error.response.message.data});
                     console.log(error.response.message.data);
                 }else{
-                    alert('An error occured due to Network!');
+                    this.errors.push({message:`An error occured and might be due to Network!
+                                                 Please check your network connection.`});
+                    console.log('An error occured due to Network!');
                 }
             });}
         }
