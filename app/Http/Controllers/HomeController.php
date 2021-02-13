@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\rider;
 use App\Models\parcel;
+use App\Models\signature;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\parcel_pickup;
@@ -13,8 +14,8 @@ use App\Models\assigned_pickup;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Validation\ValidationException;
 
+use Illuminate\Validation\ValidationException;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class HomeController extends Controller
@@ -212,14 +213,26 @@ class HomeController extends Controller
                     });
                 $image_resize->orientate();
                 if($image_resize->save(storage_path('app/public/images/signatures/'.$nameToStore))){
-                    $parcel = parcel::where('id', $request->parcelid)->first();
-                    $parcel->status = 'delivered';
-                    $parcel->update();
-                    return response(json_encode([
-                        'status' =>'success',
-                        'message' =>"Parcel delivered and updated successfully.",
-                        'result' => []
-                    ]), 200);
+                    $signature = new signature;
+                    $signature->parcel_id = $request->parcelid;
+                    $signature->image = $nameToStore;
+                    if($signature->save()){
+                        $parcel = parcel::where('id', $request->parcelid)->first();
+                        $parcel->status = 'delivered';
+                        $parcel->update();
+                        return response(json_encode([
+                            'status' =>'success',
+                            'message' =>"Parcel delivered and updated successfully.",
+                            'result' => []
+                        ]), 200);
+                    }else{
+                        unlink(storage_path('app/public/images/signatures/'.$nameToStore));
+                        return response(json_encode([
+                            'status' =>'error',
+                            'message' =>"Could not save the signature and update parcel status! Please try again.",
+                            'result' => []
+                        ]), 200);
+                    }
                 }else{
                     return response(json_encode([
                         'status' =>'error',
@@ -252,8 +265,7 @@ class HomeController extends Controller
             }
         }
 
-        $update=$request->user()->update();
-        if($update){
+        if($request->user()->update()){
             return response(json_encode([
             'status' =>'success',
             'message' =>"Profile Updated successfully.",
