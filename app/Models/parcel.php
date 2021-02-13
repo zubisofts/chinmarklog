@@ -18,4 +18,9 @@ class parcel extends Model
     {
         return $this->belongsTo('App\Models\parcel_category', 'category_id');
     }
+
+    public function signature()
+    {
+        return $this->hasOne('App\Models\signature');
+    }
 }
