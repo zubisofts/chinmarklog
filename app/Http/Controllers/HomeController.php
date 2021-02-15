@@ -188,7 +188,20 @@ class HomeController extends Controller
         if($request->action == 'stop_parcel'){
             $parcel = parcel::where('id', $request->parcelid)->first();
             $parcel->status = 'stopped';
-            $parcel->update();
+            if($parcel->update()){
+                return response(json_encode([
+                    'status' =>'success',
+                    'message' =>"Parcel delivery has been stopped successfully.",
+                    'result' => []
+                ]), 200);
+            }
+                return response(json_encode([
+                    'status' =>'error',
+                    'message' =>"There was an error completing the request",
+                    'result' => []
+                ]), 200);
+            
+            // $parcel->update();
         }elseif ($request->action == 'start_parcel') {
             $parcel = parcel::where('id', $request->parcelid)->first();
             $parcel->status = 'transit';
@@ -293,7 +306,7 @@ class HomeController extends Controller
         }
         return response(json_encode([
             'status' =>'success',
-            'message' =>"Profile Updated successfully.",
+            'message' =>"Pickup list retrieved successfully.",
             'result' => [
                 'pickup_list' => $parcelArray
             ]
